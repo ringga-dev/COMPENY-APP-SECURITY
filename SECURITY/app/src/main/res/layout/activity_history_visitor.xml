@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ui.scan.HistoryVisitorActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_marginVertical="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15dp"
+                    android:background="@drawable/bg_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <RadioGroup
+                        android:scrollbarSize="25dp"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/rg_stts"
+                       android:padding="5dp">
+                        <RadioButton
+                            android:fontFamily="@font/cherry_cream_soda"
+                            android:textColor="#4E4602"
+                            android:textSize="25dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/rb_keluar"
+                            android:text="Izin Keluar"/>
+
+                        <RadioButton
+                            android:textSize="25dp"
+                            android:fontFamily="@font/cherry_cream_soda"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#055300"
+                            android:id="@+id/rb_masuk"
+                            android:text="Masuk Kembali"/>
+                    </RadioGroup>
+
+                </LinearLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="gone"
+                    android:id="@+id/tf_dari"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:hint="Dari"
+                    android:textColorHint="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ed_dari"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:fontFamily="@font/the_meshroom_regular"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tf_menuju"
+                    android:visibility="gone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:hint="Menuju"
+                    android:textColorHint="@color/black">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ed_menuju"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:fontFamily="@font/the_meshroom_regular"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_set"
+                        android:background="@drawable/bg_alert"
+                        android:text="Set"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/asian_ninja"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="100dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/v_scan"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.02"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/barcodeView">
+
+        <ImageView
+            android:padding="5dp"
+            android:background="@drawable/loign_shape"
+            android:src="@drawable/ic_qrcode"
+            android:layout_weight="0.08"
+            android:id="@+id/btnScanContinuous"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:text="Scan+" />
+
+        <TextView
+            android:gravity="center"
+            android:id="@+id/txtResultContinuous"
+            android:layout_weight="0.8"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_text"
+            android:paddingHorizontal="10dp"
+            android:text="..." />
+
+    </LinearLayout>
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:visibility="gone"
+        android:id="@+id/barcodeView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:zxing_scanner_layout="@layout/costum_scan">
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+
+</LinearLayout>

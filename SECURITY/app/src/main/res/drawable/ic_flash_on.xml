@@ -1,0 +1,12 @@
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<vector android:height="100dp" android:tint="@color/teal_200"
+    android:viewportHeight="24" android:viewportWidth="24"
+    android:width="100dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/white" android:pathData="M7,2v11h3v9l7,-12h-4l4,-8z"/>
+</vector>

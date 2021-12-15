@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/alert_custom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card"
+    android:padding="5dp"
+    app:cardCornerRadius="10dp">
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading" />
+
+</LinearLayout>

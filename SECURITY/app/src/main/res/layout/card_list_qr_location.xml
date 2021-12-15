@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:cardCornerRadius="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:padding="10dp"
+        android:background="@drawable/bg_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_idqr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:fontFamily="@font/asian_ninja"
+            android:text="id qrcode"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/tv_lot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:fontFamily="@font/asian_ninja"
+            android:text="lot"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

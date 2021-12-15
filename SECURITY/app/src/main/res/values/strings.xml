@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ETOWA SECURITY</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="login">Login</string>
+    <string name="page">Login Page</string>
+    <string name="register">REGISTER</string>
+    <string name="lupaPassword">LUPA PASSWORD</string>
+
+
+</resources>

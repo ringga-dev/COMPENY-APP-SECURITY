@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.history.HistoryPatrolActivity">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/pick"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="end"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                android:layout_weight="0.15"
+                tools:ignore="MissingClass">
+
+                <EditText
+                    android:id="@+id/editText1"
+                    android:layout_weight="1.8"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:enabled="false"
+                    android:hint="Enter Date"/>
+
+                <ImageView
+                    android:id="@+id/iv_calender"
+                    android:src="@drawable/ic_calender"
+                    android:layout_weight="0.4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="cari"
+                    android:textSize="26dp"
+                    android:background="@drawable/bg_text"
+                    android:fontFamily="@font/royalacid"/>
+
+                <ImageView
+                    android:id="@+id/iv_cari"
+                    android:src="@drawable/ic_cari"
+                    android:layout_weight="0.4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="cari"
+                    android:textSize="26dp"
+                    android:background="@drawable/bg_text"
+                    android:fontFamily="@font/royalacid"/>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list_patrol"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                tools:listitem="@layout/card_list_patrol"
+                android:layout_weight="1.85"/>
+        </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loading"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="80dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/ic_loading1"
+        tools:ignore="MissingConstraints"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

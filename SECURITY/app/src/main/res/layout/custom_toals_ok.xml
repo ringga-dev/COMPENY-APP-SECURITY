@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    style="@style/Theme.MaterialComponents.NoActionBar.Bridge"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="20sp"
+    app:cardCornerRadius="30sp"
+    android:layout_height="wrap_content">
+
+
+
+    <LinearLayout
+        android:layout_margin="15sp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:background="#00FF0000"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_gravity="center"
+            app:lottie_rawRes="@raw/success" />
+        <TextView
+            android:id="@+id/tv_text"
+            android:fontFamily="@font/may_lova_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#20FF08"
+            android:textStyle="bold"
+            android:text="Wellcome to Etowa Mobile"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

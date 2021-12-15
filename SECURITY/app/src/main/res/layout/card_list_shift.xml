@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="3dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:cardCornerRadius="20dp"
+    android:id="@+id/cart_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:padding="10dp"
+        android:background="@drawable/bg_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_shift"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:padding="5dp"
+            android:fontFamily="@font/gecko_lunch"
+            android:text="shift"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/tv_masuk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gecko_lunch"
+            android:padding="5dp"
+            android:text="Masuk"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/tv_keluar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gecko_lunch"
+            android:padding="5dp"
+            android:text="Keluar"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:textColor="#FFB700"
+            android:id="@+id/tv_m_rest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gecko_lunch"
+            android:padding="5dp"
+            android:text="Masuk"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:textColor="#FFB700"
+            android:id="@+id/tv_s_rest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gecko_lunch"
+            android:padding="5dp"
+            android:text="Keluar"
+            android:textSize="15dp"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

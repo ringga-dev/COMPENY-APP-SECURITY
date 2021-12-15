@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cart_item"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:padding="6dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:paddingHorizontal="8dp"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="0.4"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/scan_qr_code" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.6">
+
+            <TextView
+                android:textColor="#7A6E02"
+                android:maxLines="1"
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:fontFamily="@font/royalacid"
+                android:layout_weight="0.2"
+                android:text="DateTime"
+                android:layout_marginHorizontal="10dp"/>
+
+            <TextView
+                android:maxLines="1"
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                android:layout_gravity="center_horizontal"
+                android:text="name"
+                android:textSize="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:maxLines="1"
+                android:id="@+id/tv_keperluan"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                android:layout_gravity="center_horizontal"
+                android:text="keperluan "
+                android:textSize="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:maxLines="1"
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:gravity="end"
+                android:text="iduser"
+                android:fontFamily="@font/royalacid"
+                android:layout_marginHorizontal="10dp"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

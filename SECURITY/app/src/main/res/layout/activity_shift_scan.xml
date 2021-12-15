@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--=================== T H A N K   Y O U ===================-->
+<!--============= TELAH MENGUNAKAN CODE SAYA ================-->
+			<!-- https://github.com/ringga-dev -->
+<!--=========================================================-->
+<!--     R I N G G A   S E P T I A  P R I B A D I            -->
+<!--=========================================================-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.scan.ShiftScanActivity">
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcodeView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="17"
+        app:zxing_scanner_layout="@layout/costum_scan">
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/barcodeView">
+
+            <ImageView
+                android:padding="5dp"
+                android:background="@drawable/loign_shape"
+                android:src="@drawable/ic_qrcode"
+                android:layout_weight="0.2"
+                android:id="@+id/btnScanContinuous"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="Scan+" />
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/txtResultContinuous"
+                android:layout_weight="0.8"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_text"
+                android:paddingHorizontal="10dp"
+                android:text="..." />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
