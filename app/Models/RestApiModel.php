@@ -71,6 +71,33 @@ class RestApiModel extends Model
         return $pesan;
     }
 
+
+    public function loginScan($bet)
+    {
+        $dataUser = $this->db->table('user_app')->where(['id_bet' => $bet])->get()->getRowArray();
+        if ($dataUser) {
+            if ($dataUser['enable_login'] == 1) {
+                $pesan = [
+                    'stts' => true,
+                    'msg' => "Berhasil login...!",
+                    'key' => $this->getKey($dataUser['id']),
+                    'data' => $dataUser
+                ];
+            } else {
+                $pesan = [
+                    'stts' => false,
+                    'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
+                ];
+            }
+        } else {
+            $pesan = [
+                'stts' => false,
+                'msg' => "email tidak terdaftar di aplikasi...!",
+            ];
+        }
+        return $pesan;
+    }
+
     public function list_report($token, $id, $tgl = null)
     {
 
@@ -169,48 +196,50 @@ class RestApiModel extends Model
         $getStts = $this->cekToken($token, $id);
         if ($getStts['stts'] == true) {
             $cek_data = $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->get()->getRowArray();
+
+
             if ($cek_data == null) {
-                $pesan = [
+                return [
                     'stts' => false,
                     'msg' => "anda belum terdaftar...!",
                 ];
             } else {
                 $tgl_cek = explode(" ", $cek_data['jadwal']);
-                if ($tgl_cek[0] == date('Y-m-d')) {
-                    if ($stts == 'masuk') {
-                        if ($cek_data['masuk'] != null) {
-                            $pesan = [
-                                'stts' => false,
-                                'msg' => "sesi telah di selesai kan...!",
-                            ];
-                        } else {
-                            $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->update(['masuk' => time(), 'id_user' => 'berjalan']);
-                            $pesan = [
-                                'stts' => true,
-                                'msg' => "scan berhasil...!",
-                            ];
-                        }
-                    } elseif ($stts == 'keluar') {
-                        if ($cek_data['keluar'] != null) {
-                            $pesan = [
-                                'stts' => false,
-                                'msg' => "sesi telah di selesaikan...!",
-                            ];
-                        } else {
-                            $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->update(['keluar' => time(), 'id_user' => 'selesai']);
-                            $pesan = [
-                                'stts' => true,
-                                'msg' => "sesi telah di selesai kan...!",
-                            ];
-                        }
+                // if ($tgl_cek[0] == date('Y-m-d')) {
+                if ($stts == 'masuk') {
+                    if ($cek_data['masuk'] != null) {
+                        $pesan = [
+                            'stts' => false,
+                            'msg' => "sesi telah di selesai kan...!",
+                        ];
+                    } else {
+                        $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->update(['masuk' => time(), 'id_user' => 'berjalan']);
+                        $pesan = [
+                            'stts' => true,
+                            'msg' => "scan berhasil...!",
+                        ];
                     }
-                    return $pesan;
-                } else {
-                    return [
-                        'stts' => false,
-                        'msg' => "sesi telah di offkan...! " . $tgl_cek[0] . " >< " . date('Y-m-d'),
-                    ];
+                } elseif ($stts == 'keluar') {
+                    if ($cek_data['keluar'] != null) {
+                        $pesan = [
+                            'stts' => false,
+                            'msg' => "sesi telah di selesaikan...!",
+                        ];
+                    } else {
+                        $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->update(['keluar' => time(), 'id_user' => 'selesai']);
+                        $pesan = [
+                            'stts' => true,
+                            'msg' => "sesi telah di selesai kan...!",
+                        ];
+                    }
                 }
+                return $pesan;
+                // } else {
+                //     return [
+                //         'stts' => false,
+                //         'msg' => "sesi telah di offkan...! " . $tgl_cek[0] . " >< " . date('Y-m-d'),
+                //     ];
+                // }
             }
         } else {
             return $getStts;
@@ -236,7 +265,7 @@ class RestApiModel extends Model
     }
 
 
-    public function cek_izin($token, $id, $bet, $stts, $dari = null, $menuju = null)
+    public function cek_izin($token, $id, $bet, $remarks, $stts, $dari = null, $menuju = null)
     {
         $cekUser = $this->db->table('user_app')->where(['id_bet' => $bet])->get()->getRowArray();
 
@@ -249,7 +278,7 @@ class RestApiModel extends Model
                 $data = $this->db->table('mas_user_scan')
                     ->select('mas_user_scan.*, user_app.name ')
                     ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
-                    ->where(['user_app.id_bet' => $bet, 'mas_user_scan.date' =>  $filter])
+                    ->where(['user_app.id_bet' => $bet])
                     ->orderBy('mas_user_scan.id', 'DESC')->get()->getRowArray();
 
                 if (!$data) {
@@ -259,7 +288,7 @@ class RestApiModel extends Model
                             'msg' => "ada tidak dapat masuk, izin keluar belum ada...!",
                         ];
                     } elseif ($stts == "keluar") {
-                        $this->db->table('mas_user_scan')->insert(['id_bet' => $bet, 'w_keluar' => time(), 'dari' => 'lot1', 'menuju' => 'lot 6', 'date' => $filter]);
+                        $this->db->table('mas_user_scan')->insert(['id_bet' => $bet, 'remarks' => $remarks, 'w_keluar' => time(), 'dari' => 'lot1', 'menuju' => 'lot 6', 'date' => $filter]);
                         return  [
                             'stts' => true,
                             'msg' => "Izin diberikan!",
@@ -279,7 +308,7 @@ class RestApiModel extends Model
                                 'msg' => "ada tidak dapat masuk, izin keluar belum ada...!",
                             ];
                         } elseif ($stts == "keluar") {
-                            $this->db->table('mas_user_scan')->insert(['id_bet' => $bet, 'w_keluar' => time(), 'dari' => $dari, 'menuju' => $menuju, 'date' => $filter]);
+                            $this->db->table('mas_user_scan')->insert(['id_bet' => $bet, 'remarks' => $remarks, 'w_keluar' => time(), 'dari' => $dari, 'menuju' => $menuju, 'date' => $filter]);
                             return  [
                                 'stts' => true,
                                 'msg' => "Izin diberikan!",
@@ -472,7 +501,7 @@ class RestApiModel extends Model
 
                 $jam = $datang_split[0] - $masuk_split[0];
                 $menit = $datang_split[1] - $masuk_split[1];
-                array_push($list, ['date' => $d['date'], 'shift' => $d['shift'], 'masuk' => $d['stts'] == 1 ? $d['masuk'] : $d['s_rest'], 'terlambat' => "$jam Jam $menit Menit", 'stts' => $d['stts']]);
+                array_push($list, ["name" => $d['name'], 'date' => $d['date'], 'shift' => $d['shift'], 'masuk' => $d['stts'] == 1 ? $d['masuk'] : $d['s_rest'], 'terlambat' => "$jam Jam $menit Menit", 'stts' => $d['stts']]);
             }
             $pesan = [
                 'stts' => true,
@@ -521,6 +550,93 @@ class RestApiModel extends Model
             ];
         } else {
             return $getStts;
+        }
+    }
+
+    public function cekDownCekOut($stts)
+    {
+        if ($stts == "cekout") {
+            $data = $this->db->table('mas_user_scan')->select('mas_user_scan.*, user_app.name, user_app.devisi')
+                ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
+                ->where("mas_user_scan.w_masuk IS NOT NULL")
+                ->get()->getResultArray();
+            $msg = "User cek out";
+        } elseif ($stts == "all") {
+            $data = $this->db->table('mas_user_scan')->select('mas_user_scan.*, user_app.name, user_app.devisi')
+                ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
+                ->get()->getResultArray();
+            $msg = "all user";
+        } else {
+            $data = $this->db->table('mas_user_scan')->select('mas_user_scan.*, user_app.name, user_app.devisi')
+                ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
+                ->where("mas_user_scan.w_masuk IS NULL")
+                ->get()->getResultArray();
+            $msg = "User belum cek out...!";
+        }
+
+
+        return [
+            'stts' => true,
+            'msg' => "$msg",
+            'data' => $data
+        ];
+        // day(mas_user_scan . date) = $tgl and month(mas_user_scan . date) = $bulan and year(mas_user_scan . date) = $tahun
+    }
+
+    public function cekOutUser($badge, $stts)
+    {
+        $date1 = explode("-", date('Y-m-d'));
+        $tahun = $date1[0];
+        $bulan = $date1[1];
+        $tgl = $date1[2];
+        $cek = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+            ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+            ->where(['badge' => $badge])
+            ->where(['is_active' => "true"])
+            ->where("approved_by IS NOT NULL")
+            ->where("YEAR(mas_cek_out.plan) = '$tahun' AND MONTH(mas_cek_out.plan) ='$bulan' AND DAY(mas_cek_out.plan) ='$tgl'")
+            ->get()
+            ->getRowArray();
+
+        if ($cek == null) {
+            return ['stts' => false, 'msg' => 'izin mungkin belum di setujui atau di buat...!'];
+        }
+
+        if ($stts == 'in') {
+            if (!$cek['date_in'] && $cek['date_out']) {
+                $this->db->table("mas_cek_out")->where(["id" => $cek['id']])->update(['date_in' => time(), 'is_active' => 'selesai']);
+                return ['stts' => true, 'msg' => $cek['name'] . 'cek in berhasil di lakukan...!'];
+            } else {
+                return ['stts' => false, 'msg' => 'anda belum melakukan cek out sebelumnya...!'];
+            }
+        } elseif ($stts == 'out') {
+            if (!$cek['date_out']) {
+                $this->db->table("mas_cek_out")->where(["id" => $cek['id']])->update(['date_out' => time(), 'is_active' => 'true']);
+                return ['stts' => true, 'msg' => $cek['name'] . ', cek out berhasil...!'];
+            } else {
+                return ['stts' => false, 'msg' => 'anda belum melakukan cek out sebelumnya...!'];
+            }
+        }
+    }
+
+    public function editFormIsActive($id)
+    {
+        $cek = $this->db->table("mas_cek_out")->where(["id" => $id])->get()->getRowArray();
+        $cekDataList =  $this->db->table("mas_cek_out")->where(["badge" => $cek['badge']])
+            ->where("id != " . $cek['id'])->where(['is_active' => 'true'])->get()->getResultArray();
+        if ($cek['date_out']) {
+            return ['stts' => false, 'msg' => 'ini tidak dapat di ubah lagi...!'];
+        }
+
+        if (count($cekDataList) < 1) {
+            if ($cek['is_active'] == "true") {
+                $this->db->table("mas_cek_out")->where(["id" => $id])->update(['is_active' => 'false']);
+            } else {
+                $this->db->table("mas_cek_out")->where(["id" => $id])->update(['is_active' => 'true']);
+            }
+            return ['stts' => true, 'msg' => 'akses telah berubah...!'];
+        } else {
+            return ['stts' => false, 'msg' => 'selesaikan jadwal yang telah di beri akses...!'];
         }
     }
 
@@ -668,27 +784,38 @@ class RestApiModel extends Model
         }
     }
 
+    public function updateImage($id, $nameFile)
+    {
+        $this->db->table('user_app')->where(['id' => $id])->update(['image' => $nameFile]);
+        $pesan = [
+            'stts' => true,
+            'msg' => "Upload berhasil...!",
+        ];
+        return $pesan;
+    }
 
 
     public function absenEtowa($bet)
     {
         $dataUser = $this->db->table('user_app')->where(['id_bet' => $bet])->get()->getRowArray();
-        $dataAbsen = $this->db->table('mas_absen_etowa')->where(['id_bet' => $bet])->orderBy('mas_absen_etowa.date', "DESC")->limit(1)->get()->getRowArray();
+        $dataAbsen = $this->db->table('mas_absen_etowa')->where(['id_bet' => $dataUser['id_finger']])->orderBy('mas_absen_etowa.date', "DESC")->get()->getRowArray();
+
+
         if ($dataAbsen) {
             $lastAbsen = $dataAbsen['time'];
         } else {
-            $lastAbsen = 100;
+            $lastAbsen = 0;
         }
 
+
         $rentang = time() - $lastAbsen;
-        // return $rentang;
         if ($rentang > 300) {
             if ($dataUser) {
                 $this->db->table('mas_absen_etowa')->insert(['id_bet' => $dataUser['id_finger'], 'date' => date("Y-m-d H:i:s"), 'time' => time()]);
                 return  [
                     'stts' => true,
-                    'msg' => "<h3>User dengan nama <h3><p> <h1>" . $dataUser['name'] . "<h1/><p><h4> $bet </h4>",
-                    'txt' =>  $dataUser['name'] . " berhasil absen"
+                    'msg' =>  $dataUser['name'] . " <br/>$bet </h4>",
+                    'txt' =>  $dataUser['name'] . " kamu berhasil absen!"
                 ];
             } else {
                 return  [
@@ -700,10 +827,136 @@ class RestApiModel extends Model
         } else {
             return  [
                 'stts' => true,
-                'msg' => "<h3>User dengan nama<h3><br/><h1> " . $dataUser['name'] . "</h1><br/> <h2>telah absen ...!</h1>",
-                'txt' =>  $dataUser['name'] . " telah selesai absen!"
+                'msg' => $dataUser['name'] . "<br/>telah absen ...!",
+                'txt' =>  "Absen talah di rekap, trimakasih!"
             ];
         }
         return $dataAbsen;
+    }
+
+
+    public function ajaxCekIzin($bet, $remarks, $stts, $dari = null, $menuju = null)
+    {
+        $cekUser = $this->db->table('user_app')->where(['id_bet' => $bet])->get()->getRowArray();
+
+
+        if ($cekUser) {
+
+            $filter = date("Y-m-d");
+            $data = $this->db->table('mas_user_scan')
+                ->select('mas_user_scan.*, user_app.name ')
+                ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
+                ->where(['user_app.id_bet' => $bet])
+                ->orderBy('mas_user_scan.id', 'DESC')->get()->getRowArray();
+
+            if (!$data) {
+                if ($stts == "masuk") {
+                    return  [
+                        'stts' => false,
+                        'msg' => "ada tidak dapat masuk, izin keluar belum ada...!",
+                    ];
+                } elseif ($stts == "keluar") {
+                    $this->db->table('mas_user_scan')->insert(['id_bet' => $bet, 'remarks' => $remarks, 'w_keluar' => time(), 'dari' => 'lot1', 'menuju' => 'lot 6', 'date' => $filter]);
+                    return  [
+                        'stts' => true,
+                        'msg' => $data['name'] . ", Izin diberikan!",
+                    ];
+                } else {
+                    return  [
+                        'stts' => false,
+                        'msg' => "ada tidak bisa melakukan ini...!",
+                    ];
+                }
+            } else {
+
+                if ($data['w_masuk']) {
+                    if ($stts == "masuk") {
+                        return  [
+                            'stts' => false,
+                            'msg' => "ada tidak dapat masuk, izin keluar belum ada...!",
+                        ];
+                    } elseif ($stts == "keluar") {
+                        $this->db->table('mas_user_scan')->insert(['id_bet' => $bet, 'remarks' => $remarks, 'w_keluar' => time(), 'dari' => $dari, 'menuju' => $menuju, 'date' => $filter]);
+                        return  [
+                            'stts' => true,
+                            'msg' => $data['name'] . ", Izin diberikan!",
+                        ];
+                    } else {
+                        return  [
+                            'stts' => false,
+                            'msg' => "ada tidak bisa melakukan ini...!",
+                        ];
+                    }
+                } else {
+                    if ($stts == "masuk") {
+                        $this->db->table('mas_user_scan')->where(['id' => $data['id']])->update(['w_masuk' => time()]);
+                        return [
+                            'stts' => true,
+                            'msg' => $data['name'] . ", Telah masuk kembali...!",
+                        ];
+                    } elseif ($stts == "keluar") {
+                        return  [
+                            'stts' => false,
+                            'msg' => "ada tidak dapat keluar, izin sebelumnya belum di selesaikan...!",
+                        ];
+                    }
+                }
+            }
+        } else {
+            return  [
+                'stts' => false,
+                'msg' => "user tidak terdaftar...!",
+            ];
+        }
+    }
+
+
+
+    public function ajaxScanVisitor($qr_code, $stts)
+    {
+
+        $cek_data = $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->get()->getRowArray();
+
+
+        if ($cek_data == null) {
+            return [
+                'stts' => false,
+                'msg' => "anda belum terdaftar...!",
+            ];
+        } else {
+            if ($stts == 'masuk') {
+                if ($cek_data['masuk'] != null) {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => "sesi telah di selesai kan...!",
+                    ];
+                } else {
+                    $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->update(['masuk' => time(), 'id_user' => 'berjalan']);
+                    $pesan = [
+                        'stts' => true,
+                        'msg' => $cek_data['nama'] . ", anda berhasil cek in...!",
+                    ];
+                }
+            } elseif ($stts == 'keluar' && $cek_data['masuk'] != null) {
+                if ($cek_data['keluar'] != null) {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => $cek_data['nama'] . ", sesi anda telah di selesaikan...!",
+                    ];
+                } else {
+                    $this->db->table('list_visitor')->where(['qr_code' => $qr_code])->update(['keluar' => time(), 'id_user' => 'selesai']);
+                    $pesan = [
+                        'stts' => true,
+                        'msg' => $cek_data['nama'] . ",sesi anda telah di selesai kan...!",
+                    ];
+                }
+            } else {
+                $pesan = [
+                    'stts' => false,
+                    'msg' => "anda belum cek in...!",
+                ];
+            }
+            return $pesan;
+        }
     }
 }

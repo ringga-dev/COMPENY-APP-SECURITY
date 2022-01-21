@@ -68,8 +68,31 @@ class Home extends BaseController
 
         $mpdf->WriteHTML($html);
         $this->response->setHeader('Content-Type', 'application/pdf');
-        $mpdf->Output('qr_code_location.pdf', 'I');
+        $mpdf->Output('QR_Code_location.pdf', 'I');
     }
+
+
+    public function save_visitor_pdf()
+    {
+        $tgl = explode(" - ", $this->request->getVar('dateRekap'));
+        $dari = date('Y-M-d', strtotime($tgl[0]));
+        $ke = date('Y-M-d', strtotime($tgl[1]));
+        $title = $this->request->getVar('title');
+        $data = [
+            'title' => "PT Etowa Packaging Indonesia",
+            'date' => "$dari s.d $ke",
+            'judul' => "$title",
+            'visitor' => $this->admin->getVisitorPrin($this->request->getVar('dateRekap'), $this->request->getVar('stts')),
+        ];
+
+        $mpdf = new \Mpdf\Mpdf();
+        $html = view('conten/print/pdf_qr_visitor', $data);
+
+        $mpdf->WriteHTML($html);
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        $mpdf->Output('QR_Code_location.pdf', 'D');
+    }
+
 
 
     //halaman undian

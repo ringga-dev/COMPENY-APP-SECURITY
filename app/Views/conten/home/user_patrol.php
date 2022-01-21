@@ -27,24 +27,22 @@
                                         <option value="<?= $u['id']; ?>"><?= "nama : " . $u['name'] . "  BET : " . $u['id_bet'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <input type="month" class="form-control col-lg-6 mr-2" id="filter" name="filter">
+                                <input type="date" class="form-control col-lg-6 mr-2" id="filter" name="filter">
                                 <button type="submit" class="btn btn-warning mr-2 center"><i class="fas fa-search fa-2x"></i></button>
                                 <a href="" class="btn btn-info mr-2 center" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-plus-square fa-2x"></i></a>
                             </div>
 
                         </form>
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table id="example2" class="table table-bordered table-hover" style="width: 100%s;">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>ID QR Code</th>
                                     <th>TGL</th>
                                     <th>Name</th>
-                                    <th>BET ID</th>
-                                    <th>No Phone</th>
+                                    <th>Badge</th>
                                     <th>Create</th>
-                                    <th>Update</th>
-                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,28 +56,12 @@
                                         <td class="text-center"><?= $u['tgl']; ?></td>
                                         <td class="text-center"><?= $u['name']; ?></td>
                                         <td class="text-center"><?= $u['id_bet']; ?></td>
-                                        <td class="text-center"><?= $u['no_phone']; ?></td>
                                         <td class="text-center"><?= $u['create']; ?></td>
-                                        <td class="text-center"><?= $u['update']; ?></td>
-                                        <td class="text-center">
-                                            <!-- <a href="<?= base_url() ?>/admin/deleteQR/<?= $u['id']; ?>" class="badge badge-danger m-1 hapus"><i class="fas fa-trash-alt fa-2x"></i></a> -->
-                                        </td>
+
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th></th>
-                                    <th>ID QR Code</th>
-                                    <th>TGL</th>
-                                    <th>Name</th>
-                                    <th>BET ID</th>
-                                    <th>No Phone</th>
-                                    <th>Create</th>
-                                    <th>Update</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                     <!-- ./card-body -->

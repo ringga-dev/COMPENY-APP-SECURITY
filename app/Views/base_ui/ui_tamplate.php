@@ -23,11 +23,22 @@
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-buttons/css/fixedColumns.dataTables.min.css">
 
     <!-- summernote -->
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/summernote/summernote-bs4.min.css">
 
+    <style>
+        th,
+        td {
+            white-space: nowrap;
+        }
 
+        div.dataTables_wrapper {
+            width: 100%;
+            margin: 0 auto;
+        }
+    </style>
     <!-- jQuery -->
     <script src="<?= base_url('assest/js/jquery.js') ?>"></script>
     <script src="<?= base_url('assest/js/typeahead.bundle.js') ?>"></script>
@@ -75,6 +86,7 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="<?= base_url('tamplate/admin') ?>/plugins/datatables-buttons/js/dataTables.fixedColumns.min.js"></script>
 
     <!-- C:\xampp\htdocs\mobile\public\assest\js\daterangepicker.css -->
     <!-- Latest compiled and minified JavaScript -->
@@ -242,6 +254,9 @@
 
         });
     </script>
+
+
+
 
     <script src="<?= base_url('assest/js/myjs.js') ?>"></script>
     <script src="<?= base_url('assest/js/date.js') ?>"></script>

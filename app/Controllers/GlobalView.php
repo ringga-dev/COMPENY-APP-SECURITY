@@ -57,4 +57,17 @@ class GlobalView extends BaseController
 
         return view('conten/absen/absen_etowa', $data);
     }
+
+
+
+
+    public function home()
+    {
+        $data = [
+            'title' => 'Absen Etowa',
+
+        ];
+
+        return view('conten/absen/home', $data);
+    }
 }

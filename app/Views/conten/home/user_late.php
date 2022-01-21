@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <form action="<?= base_url('admin/late_user') ?>" method="POST" class="col-md-12  text-right">
                             <div class="row text-right ml-2 mr-2">
-                                <select type="text" class="custom-select col mr-2" id="user" name="user">
+                                <select type="text" class="custom-select col-lg-5 mr-2 select2bs4" id="user" name="user">
                                     <option value="">Filter</option>
                                     <?php foreach ($user as $u) : ?>
                                         <option value="<?= $u['id_bet']; ?>"><?= "nama : " . $u['name'] . "  BET : " . $u['id_bet'] ?></option>
@@ -99,5 +99,11 @@
     <!--/. container-fluid -->
 </section>
 <!-- /.content -->
+
+<script>
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+</script>
 
 <?= $this->endSection(); ?>

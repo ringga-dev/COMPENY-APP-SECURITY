@@ -54,6 +54,14 @@ class UserApi extends ResourceController
         return $this->respond($data, 200);
     }
 
+
+    public function login_bet()
+    {
+        $bet = $this->request->getPost('id_bet');
+        $data = $this->model->loginScan($bet);
+        return $this->respond($data, 200);
+    }
+
     public function list_patrol()
     {
         $token = $this->request->getPost('token');
@@ -98,6 +106,7 @@ class UserApi extends ResourceController
         $qr_code = $this->request->getPost('qr_code');
         $stts = $this->request->getPost('stts');
 
+
         $data = $this->model->scan_visitor($token, $id, $qr_code, $stts);
 
         return $this->respond($data, 200);
@@ -127,11 +136,12 @@ class UserApi extends ResourceController
         $token = $this->request->getPost('token');
         $id = $this->request->getPost('id');
         $bet = $this->request->getPost('bet');
+        $remarks = $this->request->getPost('remarks');
         $dari = $this->request->getPost('dari');
         $menuju = $this->request->getPost('menuju');
         $stts = $this->request->getPost('stts');
 
-        $data = $this->model->cek_izin($token, $id, $bet, $stts, $dari, $menuju);
+        $data = $this->model->cek_izin($token, $id, $bet, $remarks, $stts, $dari, $menuju);
 
         return $this->respond($data, 200);
     }
@@ -230,16 +240,114 @@ class UserApi extends ResourceController
 
 
 
+    public function upload_image()
+    {
+        if ($this->validate([
+            'image' => [
+                'rules'  => 'is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'is_image' => '{field} file kamu bukan gambar ...',
+                    'mime_in' => '{field} file kamu bukan gambar...'
+                ]
+            ]
+        ])) {
+            $image = $this->request->getFile('image');
 
 
+            $path = './assets/image/profile/';
+            $gambar = service('image');
 
 
+            if ($image != null) {
+                $nameFile = $image->getRandomName();
+                $image->move($path, $nameFile);
+
+                $gambar->withFile($path . '/' . $nameFile)
+                    ->save($path . "/" . $nameFile);
+                $data = $this->model->updateImage(
+                    $this->request->getPost('id'),
+                    $nameFile
+                );
+                return $this->respond($data, 200);
+            } else {
+                $pesan = [
+                    'stts' => false,
+                    'msg' => "OPS..!, \n Foto Masih Kosong...!",
+                ];
+                return $this->respond($pesan, 200);
+            }
+        } else {
+            $errors = \Config\Services::validation();
+            $err = $errors->getError('image');
+            $pesan = [
+                'stts' => false,
+                'msg' => "OPS..!, \n $err...!",
+            ];
+            return $this->respond($pesan, 200);
+        }
+    }
 
 
     public function absen_etowa()
     {
         $bet = $this->request->getPost('bet');
         $data = $this->model->absenEtowa($bet);
+        return $this->respond($data, 200);
+    }
+
+    public function cek_user_izin()
+    {
+        $stts = $this->request->getPost('stts');
+        $data = $this->model->cekDownCekOut($stts);
+
+        return $this->respond($data, 200);
+    }
+
+    //ajax function
+    public function ajax_form_cekout()
+    {
+        $badge = $this->request->getVar('badge');
+        $stts = $this->request->getVar('stts');
+
+        $pesan = $this->model->cekOutUser($badge, $stts);
+
+        echo json_encode($pesan);
+    }
+
+    public function ajax_is_active_form()
+    {
+        $id = $this->request->getVar('id');
+        $pesan = $this->model->editFormIsActive($id);
+
+        echo json_encode($pesan);
+    }
+
+
+    public function ajax_user_izin()
+    {
+        $bet = $this->request->getPost('bet');
+        $remarks = $this->request->getPost('remarks');
+        $dari = $this->request->getPost('dari');
+        $menuju = $this->request->getPost('menuju');
+        $stts = $this->request->getPost('stts');
+
+        $data = $this->model->ajaxCekIzin($bet, $remarks, $stts, $dari, $menuju);
+
+        return $this->respond($data, 200);
+    }
+
+
+
+
+    public function ajax_scan_visitor()
+    {
+
+        $qr_code = $this->request->getPost('qr_code');
+        $stts = $this->request->getPost('stts');
+
+
+        $data = $this->model->ajaxScanVisitor($qr_code, $stts);
+
         return $this->respond($data, 200);
     }
 }

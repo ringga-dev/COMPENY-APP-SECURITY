@@ -10,13 +10,15 @@
         }
 
         body {
-            background-color: #000a12;
+            /* background-color: #000a12; */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .card {
+            border: solid;
+            border-color: #000a12;
             display: flex;
             align-items: center;
             background-color: #fff;
@@ -134,4 +136,3 @@
 </body>
 
 </html>
-

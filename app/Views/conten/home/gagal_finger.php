@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <form action="<?= base_url('admin/failed_for_finger') ?>" method="POST" class="col-md-12  text-right">
                             <div class="row text-right ml-2 mr-2">
-                                <select type="text" class="custom-select col mr-2" id="users" name="users">
+                                <select type="text" class="custom-select select2bs4 col-lg-5 mr-2" id="users" name="users">
                                     <option value="">Filter</option>
                                     <?php foreach ($user as $u) : ?>
                                         <option value="<?= $u['id_bet']; ?>"><?= "nama : " . $u['name'] . "  BET : " . $u['id_bet'] ?></option>
@@ -35,7 +35,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>BET</th>
+                                    <th>BADGE</th>
                                     <th>STATUS</th>
                                     <th>Keterangan</th>
                                     <th>Waktu</th>
@@ -63,7 +63,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Name</th>
-                                    <th>BET</th>
+                                    <th>BADGE</th>
                                     <th>STATUS</th>
                                     <th>Keterangan</th>
                                     <th>Waktu</th>
@@ -85,38 +85,12 @@
     <!--/. container-fluid -->
 </section>
 <!-- /.content -->
-<script>
-    function ubah(nik) {
-        $.ajax({
-            type: "post",
-            url: "<?= base_url('admin/blok_akses') ?>",
-            data: {
-                'nik': nik,
-            },
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-                if (response.stts == true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Proses Berhasil...!',
-                        text: `${response.msg}, Have a nice day...!`
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Proses Berhasil...!',
-                        text: `${response.msg}, Have a nice day...!`
-                    })
-                }
-            },
-            error: function(xhr, opsi, errors) {
-                console.log(xhr.status + "\n" + xhr.responseText + "\n" + errors);
-            }
-        });
-    }
-</script>
 
+<script>
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+</script>
 <!-- modal barang add -->
 
 <?= $this->endSection(); ?>

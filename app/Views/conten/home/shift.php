@@ -34,8 +34,8 @@
                             <thead>
                                 <tr>
                                     <th>Shift</th>
-                                    <th>Masuk</th>
-                                    <th>Keluar</th>
+                                    <th>IN</th>
+                                    <th>OUT</th>
                                     <th>Start Istirahat</th>
                                     <th>Stop Istirahat</th>
                                     <th>Create</th>
@@ -49,16 +49,20 @@
                                     $i++ ?>
                                     <tr>
                                         <td class="text-center"><?= $u['shift']; ?></td>
-                                        <td class="text-center">Pukul <?= $u['masuk']; ?> WIB</td>
-                                        <td class="text-center">Pukul <?= $u['keluar'] ?> WIB</td>
-                                        <td class="text-center">Pukul <?= $u['m_rest'] ?> WIB</td>
-                                        <td class="text-center">Pukul <?= $u['s_rest']; ?> WIB</td>
+                                        <td class="text-center"> <?= $u['masuk']; ?></td>
+                                        <td class="text-center"> <?= $u['keluar'] ?></td>
+                                        <td class="text-center"> <?= $u['m_rest'] ?></td>
+                                        <td class="text-center"> <?= $u['s_rest']; ?></td>
                                         <td class="text-center"><?= $u['create'] ?></td>
                                         <td class="text-center"><?= $u['update']; ?></td>
 
                                         <td class="text-center">
                                             <a href="" class="badge badge-warning m-1" data-toggle="modal" data-target="#modal-xl<?= $u['id'] ?>"><i class="fas fa-edit fa-2x"></i></a>
-                                            <a href="<?= base_url() ?>/admin/delete_shift/<?= $u['id']; ?>" class="badge badge-danger m-1 hapus"><i class="fas fa-trash-alt fa-2x"></i></a>
+                                            <?php
+                                            if (session()->get('role') == "admin") :
+                                            ?>
+                                                <a href="<?= base_url() ?>/admin/delete_shift/<?= $u['id']; ?>" class="badge badge-danger m-1 hapus"><i class="fas fa-trash-alt fa-2x"></i></a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                     <!-- modal barang edit -->
@@ -128,18 +132,7 @@
                                     </div>
                                 <?php endforeach; ?>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Shift</th>
-                                    <th>Masuk</th>
-                                    <th>Keluar</th>
-                                    <th>Start Istirahat</th>
-                                    <th>Stop Istirahat</th>
-                                    <th>Create</th>
-                                    <th>Update</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                 </div>

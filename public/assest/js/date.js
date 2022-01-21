@@ -14,6 +14,7 @@ $(function () {
     });
 
     $('#example2').DataTable({
+          'dom': 'Bflrtip',
         "paging": true,
         // "lengthChange": false,
         // "searching": false,
@@ -21,7 +22,15 @@ $(function () {
         "info": true,
         "autoWidth": false,
         "responsive": true,
+        "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],
+        "scrollY": 1000,
+        "scrollX": 1000,
+        "buttons": ["pdf", "excel",],
     });
+
+
+      
+        
 
     $('#example3').DataTable({
         "paging": true,
@@ -34,12 +43,7 @@ $(function () {
     });
 
            
-    $('#tableView').DataTable({
-        "ordering": false,
-        "searching": true,
-        "info": true,
-        "scrollX": true,
-    });
+
 
    
     $("#tableViewReport").DataTable({

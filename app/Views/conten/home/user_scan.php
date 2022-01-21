@@ -18,54 +18,61 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body md-2">
+                        <style>
+                            th {
+                                width: auto;
+                                height: auto;
+                            }
+                        </style>
+
+                        <form action="<?= base_url('admin/all_users') ?>" method="POST" class="col-md-12  text-right">
+                            <div class="row text-right ml-2 mr-2">
+                                <select type="text" class="custom-select col-lg-6 mr-2 select2bs4" id="id" name="id">
+                                    <option value="">Filter</option>
+                                    <?php foreach ($user as $u) : ?>
+                                        <option value="<?= $u['id']; ?>"><?= "nama : " . $u['name'] . "  BET : " . $u['id_bet'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="date" class="form-control col-lg-5 mr-2" id="filter" name="filter">
+                                <button type="submit" class="btn btn-warning mr-2 center"><i class="fas fa-search fa-2x"></i></button>
+                            </div>
+
+                        </form>
 
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>NAME</th>
                                     <th>DEVISI</th>
-                                    <th>ID BET</th>
+                                    <th>BADGE</th>
                                     <th>KELUAR</th>
                                     <th>MASUK KEMBALI</th>
                                     <th>LAMA</th>
                                     <th>DARI</th>
                                     <th>MENUJU</th>
-                                    <th>DATE</th>
+                                    <th>REMARKS</th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 <?php $i = 0;
-                                foreach ($scan as $u) :
+                                foreach ($scan as $s) :
                                     $i++ ?>
                                     <tr>
-                                        <td><?= $u['name']; ?></td>
-                                        <td><?= $u['devisi']; ?></td>
-                                        <td><?= $u['id_bet']; ?></td>
-                                        <td><?= $u['w_keluar'] ? date('d-M-Y h:i:s A', $u['w_keluar']) : ""; ?></td>
-                                        <td><?= $u['w_masuk'] ? date('d-M-Y h:i:s A', $u['w_masuk']) : ""; ?></td>
-                                        <td><?= ($u['w_masuk'] - $u['w_keluar']) / 60 < 0 ? "sedang berjalan" : round(($u['w_masuk'] - $u['w_keluar']) / 60, 2) . " menit" ?> </td>
-                                        <td><?= $u['dari']; ?></td>
-                                        <td><?= $u['menuju']; ?></td>
-                                        <td><?= $u['date']; ?></td>
-
+                                        <td><?= $s['name']; ?></td>
+                                        <td><?= $s['devisi']; ?></td>
+                                        <td><?= $s['id_bet']; ?></td>
+                                        <td><?= $s['w_keluar'] ? date('d-M-Y h:i:s A', $s['w_keluar']) : ""; ?></td>
+                                        <td><?= $s['w_masuk'] ? date('d-M-Y h:i:s A', $s['w_masuk']) : ""; ?></td>
+                                        <td><?= ($s['w_masuk'] - $s['w_keluar']) / 60 <= 0 ? "sedang berjalan" : round(($s['w_masuk'] - $s['w_keluar']) / 60 / 60, 2) . " Jam" ?> </td>
+                                        <td><?= $s['dari']; ?></td>
+                                        <td><?= $s['menuju']; ?></td>
+                                        <td><?= $s['remarks']; ?></td>
 
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>NAME</th>
-                                    <th>DEVISI</th>
-                                    <th>ID BET</th>
-                                    <th>KELUAR</th>
-                                    <th>MASUK KEMBALI</th>
-                                    <th>LAMA</th>
-                                    <th>DARI</th>
-                                    <th>MENUJU</th>
-                                    <th>DATE</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                     <!-- ./card-body -->
@@ -76,45 +83,15 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
-
-
-
     </div>
     <!--/. container-fluid -->
 </section>
 <!-- /.content -->
 <script>
-    function ubah(nik) {
-        $.ajax({
-            type: "post",
-            url: "<?= base_url('admin/blok_akses') ?>",
-            data: {
-                'bet': nik,
-            },
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-                if (response.stts == true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Proses Berhasil...!',
-                        text: `${response.msg}, Have a nice day...!`
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Proses Berhasil...!',
-                        text: `${response.msg}, Have a nice day...!`
-                    })
-                }
-            },
-            error: function(xhr, opsi, errors) {
-                console.log(xhr.status + "\n" + xhr.responseText + "\n" + errors);
-            }
-        });
-    }
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
 </script>
-
 <!-- modal barang add -->
 
 <?= $this->endSection(); ?>

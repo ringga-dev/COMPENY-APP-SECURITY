@@ -69,7 +69,11 @@
                                         <td class="text-center"><?= $u['update']; ?></td>
                                         <td class="text-center">
                                             <a href="" class="badge badge-warning m-1" data-toggle="modal" data-target="#modal-xl<?= $u['id'] ?>"><i class="fas fa-edit fa-2x"></i></a>
-                                            <a href="<?= base_url() ?>/admin/deleteQR/<?= $u['id']; ?>" class="badge badge-danger m-1 hapus"><i class="fas fa-trash-alt fa-2x"></i></a>
+                                            <?php
+                                            if (session()->get('role') == "admin") :
+                                            ?>
+                                                <a href="<?= base_url() ?>/admin/deleteQR/<?= $u['id']; ?>" class="badge badge-danger m-1 hapus"><i class="fas fa-trash-alt fa-2x"></i></a>
+                                            <?php endif; ?>
                                         </td>
                                         <!-- modal barang edit -->
                                         <div class="modal fade" id="modal-xl<?= $u['id'] ?>">

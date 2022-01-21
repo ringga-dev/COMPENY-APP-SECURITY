@@ -17,7 +17,11 @@
                         </div>
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body">
+                    <div class="card-body ">
+                        <form action="<?= base_url('AdminControl/produc') ?>" method="POST" class="col-md-12 m-2 p-2 text-right">
+                            <a href="" class="btn btn-info mr-2 center" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-plus-square fa-2x"></i></a>
+                        </form>
+
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -80,6 +84,69 @@
     </div>
     <!--/. container-fluid -->
 </section>
+
+<!-- modal userapp add -->
+<div class="modal fade" id="modal-xl">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ADD Form</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- class="was-validated" -->
+            <form action="<?= base_url() ?>/admin/add_user" method="POST" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="nama_barang">Nik</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="nik" name="nik" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="harga">Username</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="username" name="username" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="harga">Fullname</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="fullname" name="fullname" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <select class="form-control form-control-sm" name="position" id="position">
+                                        <option selected>Open this select status user</option>
+                                        <option value="adminUndia">Admin Undia</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.col (RIGHT) -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
 <!-- /.content -->
 <script>
     function ubah(nik) {

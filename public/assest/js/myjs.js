@@ -84,6 +84,26 @@ $('.hapus-menu').on('click', function(e) {
 
     })
 
+$('.approve').on('click', function (e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Anda yakin untuk menyetujui ini!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.location.href = url;
+            } 
+        })
+
+    })
+
     $('.ok-update').on('click', function(e) {
         e.preventDefault();
         const url = $(this).attr('href');

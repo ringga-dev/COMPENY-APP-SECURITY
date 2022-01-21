@@ -14,7 +14,7 @@ class AdminModel extends Model
 
     public function hapusUser($id)
     {
-        $this->db->table('admin_web')->where(['id' => $id])->delete();
+        $this->db->table('admin_web')->where(['nik' => $id])->delete();
         return ['stts' => true, 'msg' => 'Proses berhasil...!'];
     }
 
@@ -45,6 +45,12 @@ class AdminModel extends Model
     public function getUserApp()
     {
         return $this->db->table('user_app')->get()->getResultArray();
+    }
+
+
+    public function getUserSecurity()
+    {
+        return $this->db->table('user_app')->where(['devisi' => "security"])->get()->getResultArray();
     }
 
     public function deleteUser($nik)
@@ -101,9 +107,9 @@ class AdminModel extends Model
     public function getVisitor($stts)
     {
         if ($stts == 'all') {
-            return $this->db->table('list_visitor')->get()->getResultArray();
+            return $this->db->table('list_visitor')->orderBy("id", "ASC")->get()->getResultArray();
         } else {
-            return $this->db->table('list_visitor')->where(['id_user' => $stts])->get()->getResultArray();
+            return $this->db->table('list_visitor')->where(['id_user' => $stts])->orderBy("id", "ASC")->get()->getResultArray();
         }
     }
 
@@ -144,20 +150,22 @@ class AdminModel extends Model
     }
 
 
-    public function userPatrol($bulan, $tahun, $id = null)
+    public function userPatrol($tgl, $bulan, $tahun, $id = null)
     {
         if ($id != null) {
             $data = $this->db->table('list_patrol')
                 ->select('list_patrol.*, user_app.name, user_app.id_bet, user_app.no_phone')
                 ->join('user_app', 'user_app.id = list_patrol.id_user')
-                ->where("month(list_patrol.tgl) = $bulan AND year(list_patrol.tgl)= $tahun AND list_patrol.id_user =$id")
+                ->where("day(list_patrol.tgl) =$tgl AND month(list_patrol.tgl) = $bulan AND year(list_patrol.tgl)= $tahun AND list_patrol.id_user =$id")
+                ->orderBy("user_app.id_bet")
                 ->orderBy('list_patrol.id', 'ASC')
                 ->get()->getResultArray();
         } else {
             $data = $this->db->table('list_patrol')
                 ->select('list_patrol.*, user_app.name, user_app.id_bet, user_app.no_phone')
                 ->join('user_app', 'user_app.id = list_patrol.id_user')
-                ->where("month(list_patrol.tgl) = $bulan AND year(list_patrol.tgl)= $tahun")
+                ->where("day(list_patrol.tgl) =$tgl AND month(list_patrol.tgl) = $bulan AND year(list_patrol.tgl)= $tahun")
+                ->orderBy("user_app.id_bet")
                 ->orderBy('list_patrol.id', 'ASC')
                 ->get()->getResultArray();
         }
@@ -165,11 +173,22 @@ class AdminModel extends Model
         return $data;
     }
 
-    public function userAll($id = null)
+    public function userAll($tgl, $bulan, $tahun, $id = null)
     {
-        return $this->db->table('mas_user_scan')->select('mas_user_scan.*, user_app.name, user_app.devisi')
-            ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
-            ->get()->getResultArray();
+
+
+        if ($id == null) {
+            $data = $this->db->table('mas_user_scan')->select('mas_user_scan.*, user_app.name, user_app.devisi')
+                ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
+                ->where("day(mas_user_scan.date) =$tgl AND month(mas_user_scan.date) = $bulan AND year(mas_user_scan.date)= $tahun")
+                ->get()->getResultArray();
+        } else {
+            $data = $this->db->table('mas_user_scan')->select('mas_user_scan.*, user_app.name, user_app.devisi')
+                ->join('user_app', "user_app.id_bet = mas_user_scan.id_bet")
+                ->where("day(mas_user_scan.date) =$tgl AND month(mas_user_scan.date) = $bulan AND year(mas_user_scan.date)= $tahun AND user_app.id =$id")
+                ->get()->getResultArray();
+        }
+        return $data;
     }
 
 
@@ -200,6 +219,33 @@ class AdminModel extends Model
             $pesan = [
                 'stts' => false,
                 'msg' => "data number phone sudah terdaftar...!",
+            ];
+        }
+        return $pesan;
+    }
+
+
+    public function addAdminWeb($data)
+    {
+        $dataUser = $this->db->table('admin_web')->where('nik', $data['nik'])
+            ->orWhere('username', $data['username'])
+            ->get()->getRowArray();
+
+        if (!$dataUser) {
+            $this->db->table('admin_web')->insert($data);
+            $pesan = [
+                'stts' => true,
+                'msg' => "data telah terdaftar...!",
+            ];
+        } elseif ($dataUser['nik'] == $data['nik']) {
+            $pesan = [
+                'stts' => false,
+                'msg' => "data nik sudah terdaftar...!",
+            ];
+        } elseif ($dataUser['username'] == $data['username']) {
+            $pesan = [
+                'stts' => false,
+                'msg' => "data username sudah terdaftar...!",
             ];
         }
         return $pesan;
@@ -359,5 +405,127 @@ class AdminModel extends Model
         } else {
             return ['stts' => false, 'msg' => 'data kosong...!'];
         }
+    }
+
+
+    public function getVisitorPrin($stts, $plan = null)
+    {
+        $tgl = explode(" - ", $stts);
+        $dari = date('Y-m-d', strtotime($tgl[0]));
+        $ke = date('Y-m-d', strtotime($tgl[1]));
+
+
+        $list_data = [];
+
+        $data =  $this->db->table('list_visitor')
+            ->where(['list_visitor.id_user' => 'plan'])
+            ->where("(list_visitor.jadwal BETWEEN CAST('$dari 00:00:00' AS DATETIME) AND CAST('$ke 23:59:59' AS DATETIME))")
+            ->orWhere("(list_visitor.jadwal BETWEEN CAST('$dari 00:00:00' AS DATETIME) AND CAST('$ke 23:59:59'AS DATETIME))")
+            ->orWhere("(list_visitor.jadwal >= CAST('$dari 00:00:00'AS DATETIME) AND list_visitor.jadwal <= CAST('$ke 23:59:59'AS DATETIME))")
+            ->orderBy("id", "ASC")->get()->getResultArray();
+
+        if ($plan == "all") {
+
+            $list_data = $data;
+        } else {
+            foreach ($data as $d) {
+                if ($plan) {
+                    if ($d['id_user'] == $plan) {
+                        array_push(
+                            $list_data,
+                            [
+                                'id' => $d['id'],
+                                'id_user' => $d['id_user'],
+                                'nama' => $d['nama'],
+                                'jadwal' => $d['jadwal'],
+                                'bertemu' => $d['bertemu'],
+                                'qr_code' => $d['qr_code'],
+                                'keperluan' => $d['keperluan'],
+                                'description' => $d['description'],
+                                'masuk' => $d['masuk'],
+                                'keluar' => $d['keluar'],
+                                'create' => $d['create'],
+                                'update' => $d['update']
+                            ]
+                        );
+                    } else {
+                        continue;
+                    }
+                } else {
+                    array_push(
+                        $list_data,
+                        [
+                            'id' => $d['id'],
+                            'id_user' => $d['id_user'],
+                            'nama' => $d['nama'],
+                            'jadwal' => $d['jadwal'],
+                            'bertemu' => $d['bertemu'],
+                            'qr_code' => $d['qr_code'],
+                            'keperluan' => $d['keperluan'],
+                            'description' => $d['description'],
+                            'masuk' => $d['masuk'],
+                            'keluar' => $d['keluar'],
+                            'create' => $d['create'],
+                            'update' => $d['update']
+                        ]
+                    );
+                }
+            }
+        }
+
+
+        return $list_data;
+    }
+
+
+    public function addFormCekout($data)
+    {
+        $this->db->table("mas_cek_out")->insert($data);
+        return ['stts' => true, 'msg' => 'data di simpan...!'];
+    }
+
+    public function getFormCekout($badge, $date)
+    {
+
+        if ($badge == "all" && $date == "all") {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')->get()->getResultArray();
+        } elseif ($badge && $date == "all") {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->where(["badge" => $badge])->get()->getResultArray();
+        } elseif ($badge == "all" && $date) {
+            $date1 = explode("-", $date);
+            $tahun = $date1[0];
+            $bulan = $date1[1];
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->where(" YEAR(mas_cek_out.plan) = '$tahun' AND MONTH(mas_cek_out.plan) ='$bulan'")->get()->getResultArray();
+        } elseif ($badge != "all" && $date != "all") {
+            $date1 = explode("-", $date);
+            $tahun = $date1[0];
+            $bulan = $date1[1];
+            $data =   $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->where(["badge" => $badge])
+                ->where(" YEAR(mas_cek_out.plan) = '$tahun' AND MONTH(mas_cek_out.plan) ='$bulan'")->get()->getResultArray();
+        } else {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')->get()->getResultArray();
+        }
+
+        return $data;
+    }
+
+    public function editFormCekout($id, $data)
+    {
+        $this->db->table("mas_cek_out")->where(['id' => $id])->update($data);
+        return ['stts' => true, 'msg' => 'berhasil di update...!'];
+    }
+
+    public function deleteFormCekout($id)
+    {
+        $this->db->table("mas_cek_out")->where(['id' => $id])->delete();
+        return ['stts' => true, 'msg' => 'berhasil di delete...!'];
     }
 }

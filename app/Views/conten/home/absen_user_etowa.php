@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <form action="<?= base_url('admin/absen_user_etowa') ?>" method="POST" class="col-md-12  text-right">
                             <div class="row text-right ml-2 mr-2">
-                                <select type="text" class="custom-select col mr-2" id="users" name="users">
+                                <select type="text" class="custom-select select2bs4 col mr-2" id="users" name="users">
                                     <option value="">Filter</option>
                                     <?php foreach ($user as $u) : ?>
                                         <option value="<?= $u['id_finger']; ?>"><?= "nama : " . $u['name'] . "  BET : " . $u['id_finger'] ?></option>
@@ -217,7 +217,11 @@
         });
     }
 </script>
-
+<script>
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+</script>
 <!-- modal barang add -->
 
 <?= $this->endSection(); ?>

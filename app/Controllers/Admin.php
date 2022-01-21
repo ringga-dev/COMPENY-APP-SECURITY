@@ -38,15 +38,44 @@ class Admin extends BaseController
     //menampilkan user
     public function user()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User',
             'user' => $this->admin->getUser(),
         ];
         return view('conten/home/user', $data);
     }
+
+    //add user
+    public function add_user()
+    {
+
+        $password = 123456;
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+        $sesi = session()->get('data');
+        $dataRegister = [
+            'nik' => $this->request->getPost('nik'),
+            'username' => $this->request->getPost('username'),
+            'password' => $password_hash,
+            'fullname' => $this->request->getPost('fullname'),
+            'position' => $this->request->getPost('position'),
+            'enable_login' => 0,
+            'create' => $sesi['username'] . " " . date("Y-M-d h:i:s A"),
+        ];
+
+        $data = $this->admin->addAdminWeb($dataRegister);
+        session()->setFlashdata('pesan', $data);
+        return redirect()->to('/admin/user');
+    }
+
     //delete user
     public function deleteUser($id)
     {
+
         $data = $this->admin->hapusUser($id);
         session()->setFlashdata('pesan', $data);
         return redirect()->to('/admin/user');
@@ -54,6 +83,7 @@ class Admin extends BaseController
     //blok akses user
     public function blok_akses()
     {
+
         $id = $this->request->getVar('nik');
 
         $data = $this->admin->aksesBlok($id);
@@ -62,14 +92,19 @@ class Admin extends BaseController
 
     public function blok_akses_userapp()
     {
+
         $id = $this->request->getVar('id');
 
-        $data = $this->admin->aksesBlok($id);
+        $data = $this->admin->aksesBlok_userApp($id);
         return json_encode($data);
     }
     // menampilkan user aplikasi
     public function user_app()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User App',
             'user' => $this->admin->getUserApp(),
@@ -79,6 +114,7 @@ class Admin extends BaseController
     // delet user aplikasi
     public function deleteUserApp($id)
     {
+
         $data = $this->admin->hapusUserApp($id);
         session()->setFlashdata('pesan', $data);
         return redirect()->to('/admin/user_app');
@@ -87,6 +123,10 @@ class Admin extends BaseController
     //menampilkan lokasi qr
     public function qr_location()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User App',
             'qr_location' => $this->admin->getQrLocation(),
@@ -187,6 +227,7 @@ class Admin extends BaseController
             'jadwal' => $this->request->getVar('date') . " " . $this->request->getVar('time'),
             'qr_code' => trim($bytes),
             'keperluan' => $this->request->getVar('keperluan'),
+            'bertemu' => $this->request->getVar('bertemu'),
             'description' => $this->request->getVar('description'),
             'id_user' => 'plan',
             'create' => date("d-M-Y h:i:s A") . " By " .  $sesi['username'],
@@ -238,20 +279,29 @@ class Admin extends BaseController
     // data patroli
     public function history_patrol()
     {
-        $filter = $this->request->getVar('filter') ? $this->request->getVar('filter') : date('Y-m');
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
+        $filter = $this->request->getVar('filter') ? $this->request->getVar('filter') : date('Y-m-d');
         $date =  explode("-", $filter);
+
         $data = [
             'title' => 'Managemen User App',
-            'datascan' => $this->admin->userPatrol($date[1], $date[0], $this->request->getVar('id')),
-            'user' => $this->admin->getUserApp(),
+            'datascan' => $this->admin->userPatrol($date[2], $date[1], $date[0], $this->request->getVar('id')),
+            'user' => $this->admin->getUserSecurity(),
         ];
-        // dd($data);
+
         return view('conten/home/user_patrol', $data);
     }
 
     // data visitor
     public function history_fisitor()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User App',
             'visitor' => $this->admin->listVisitor($this->request->getVar('id')),
@@ -262,10 +312,19 @@ class Admin extends BaseController
     //semua user
     public function all_users()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
+
+        $filter = $this->request->getVar('filter') ? $this->request->getVar('filter') : date('Y-m-d');
+        $date =  explode("-", $filter);
         $data = [
             'title' => 'Managemen User App',
-            'scan' => $this->admin->userAll(),
+            'scan' => $this->admin->userAll($date[2], $date[1], $date[0], $this->request->getVar('id')),
+            'user' => $this->admin->getUserApp(),
         ];
+        // dd($data);
         return view('conten/home/user_scan', $data);
     }
 
@@ -278,12 +337,13 @@ class Admin extends BaseController
         $dataRegister = [
             'name' => $this->request->getPost('name'),
             'id_bet' => $this->request->getPost('id_bet'),
+            'id_finger' => $this->request->getPost('id_finger'),
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
             'password' => $password_hash,
             'image' => 'user.jpg',
-            'enable_login' => 1,
+            'enable_login' => 0,
             'created' => date("Y-M-d h:i:s A"),
             'created_by' => $sesi['username'],
         ];
@@ -300,6 +360,7 @@ class Admin extends BaseController
         $dataRegister = [
             'name' => $this->request->getPost('name'),
             'id_bet' => $this->request->getPost('id_bet'),
+            'id_finger' => $this->request->getPost('id_finger'),
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
@@ -322,6 +383,10 @@ class Admin extends BaseController
 
     public function izin()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User App',
             'visitor' => $this->admin->getIzin($this->request->getVar('filter') ? $this->request->getVar('filter') : "all", $this->request->getVar('date')),
@@ -342,6 +407,10 @@ class Admin extends BaseController
 
     public function shift()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User App',
             'visitor' => $this->admin->getShift(),
@@ -404,7 +473,6 @@ class Admin extends BaseController
 
         $data = $spreadsheet->getActiveSheet()->toArray();
 
-        $datafile = [];
         foreach ($data as $x => $row) {
             if ($x == 0 or $x == 1) {
                 continue;
@@ -417,12 +485,13 @@ class Admin extends BaseController
             $dataRegister = [
                 'name' => $row[1],
                 'id_bet' => $row[2],
+                'id_finger' => $row[6],
                 'email' => $row[3],
                 'no_phone' => $row[4],
                 'devisi' => $row[5],
                 'password' => $password_hash,
                 'image' => 'user.jpg',
-                'enable_login' => 1,
+                'enable_login' => 0,
                 'created' => date("Y-M-d h:i:s A"),
                 'created_by' => $sesi['username'],
             ];
@@ -436,6 +505,10 @@ class Admin extends BaseController
 
     public function failed_for_finger()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User Gagal Finger',
             'visitor' => $this->admin->getGagalfinger($this->request->getVar('users') != null ? $this->request->getVar('users') : "all", $this->request->getVar('filter') ? $this->request->getVar('filter') : date('Y-m')),
@@ -449,6 +522,10 @@ class Admin extends BaseController
 
     public function absen_user_etowa()
     {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
         $data = [
             'title' => 'Managemen User Gagal Finger',
             'absen' => $this->admin->getAbsenEtowa($this->request->getVar('users') ? $this->request->getVar('users') : "all", $this->request->getVar('filter') ? $this->request->getVar('filter') : "all"),
@@ -509,5 +586,82 @@ class Admin extends BaseController
             session()->setFlashdata('pesan', $data);
             return redirect()->to('/admin/absen_user_etowa');
         }
+    }
+
+    public function cek_out()
+    {
+        $badge = !$this->request->getVar('id_badge') ? "all" : $this->request->getVar('id_badge');
+        $date = !$this->request->getVar('filter') ? "all" : $this->request->getVar('filter');
+
+
+        // dd("$badge, $date");
+        $data = [
+            'title' => 'Managemen User App',
+            'visitor' =>  $this->admin->getFormCekout($badge, $date),
+            'user' => $this->admin->getUserApp(),
+        ];
+        // dd($this->request->getVar('filter'));
+        return view('conten/home/cek_out', $data);
+    }
+
+    public function add_form_cekout()
+    {
+        $data = [
+            'badge' => $this->request->getVar('badge'),
+            'plan' => $this->request->getVar('plan'),
+            'destination' => $this->request->getVar('destination'),
+            'remarks' => $this->request->getVar('remarks'),
+            'stts_form' => $this->request->getVar('stts_form'),
+            'from' => $this->request->getVar('from'),
+            'to' => $this->request->getVar('to'),
+            'approved_by' => $this->request->getVar('approved_by'),
+            'create' => date("Y-M-d h:i:s A"),
+
+        ];
+
+        $pesan = $this->admin->addFormCekout($data);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/cek_out');
+    }
+
+    public function approve()
+    {
+        $sesion = session()->get('data');
+        $id = $this->request->getVar('id');
+        $data = [
+            'approved_by' => $sesion['fullname'] . " " . date("Y-M-d h:i:s A"),
+            'update' =>  $sesion['fullname'] . " " . date("Y-M-d h:i:s A")
+        ];
+
+        $pesan = $this->admin->editFormCekout($id, $data);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/cek_out');
+    }
+
+    public function delete_form_cekout()
+    {
+        $id = $this->request->getVar('id');
+
+        $pesan = $this->admin->deleteFormCekout($id);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/cek_out');
+    }
+
+    public function edit_form_cekout()
+    {
+        $sesion = session()->get('data');
+        $id = $this->request->getVar('id');
+        $data = [
+            'plan' => $this->request->getVar('plan'),
+            'destination' => $this->request->getVar('destination'),
+            'remarks' => $this->request->getVar('remarks'),
+            'stts_form' => $this->request->getVar('stts_form'),
+            'from' => $this->request->getVar('from'),
+            'to' => $this->request->getVar('to'),
+            'update' =>  $sesion['fullname'] . " " . date("Y-M-d h:i:s A")
+        ];
+        $pesan = $this->admin->editFormCekout($id, $data);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/cek_out');
     }
 }
