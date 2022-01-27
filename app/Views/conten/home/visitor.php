@@ -39,7 +39,7 @@
                                     <th>Timetable</th>
                                     <th>STTS</th>
                                     <th>IMAGE QR</th>
-                                    <th>Necessities</th>
+                                    <th>Compeny</th>
                                     <th>Meet</th>
                                     <th>Description</th>
                                     <th>IN</th>
@@ -71,7 +71,8 @@
                                             //quick and simple:
                                             $lokasi = base_url("assets/image/qr_visitor/$nama.png");
                                             ?>
-                                            <img class="ok-download" src="<?= $lokasi ?>" />
+                                            <a target="_blank" class="ok-ambil" href="<?= base_url('admin/generate_badge?id=' . $u['id'] . "&action=visitor"); ?>"> <img src="<?= $lokasi ?>" />
+                                            </a>
 
                                         </td>
                                         <td class="text-center" <?= $color ?>><?= $u['keperluan']; ?></td>
@@ -209,28 +210,31 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label for="nama_barang">name</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="name" name="name" required>
-                                    </div>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="harga">Timetable</label>
                                     <div class="input-group">
-                                        <input type="date" class="form-control col-lg-6" id="date" name="date" required>
+                                        <input type="date" max="3000-12-25" class="form-control col-lg-6" id="date" name="date" required>
                                         <input type="time" class="form-control col-lg-6" id="time" name="time" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="jumlah">Necessities</label>
+                                    <label for="nama_barang">Visitor Name</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="jumlah">Compeny</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="keperluan" name="keperluan" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="bertemu">Meet</label>
+                                    <label for="bertemu">Meet (Etowa Person)</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="bertemu" name="bertemu" required>
                                     </div>
@@ -260,9 +264,5 @@
     <!-- /.modal-content -->
 
 </div>
-<script>
-    function image(imageSrc) {
-        window.open(imageSrc)
-    }
-</script>
+
 <?= $this->endSection(); ?>

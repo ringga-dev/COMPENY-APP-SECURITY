@@ -38,6 +38,31 @@ class RestApiModel extends Model
         return $pesan;
     }
 
+
+    public function editFormCekout($id, $data)
+    {
+        $sesion = session()->get('data');
+
+        $dataUser = $this->db->table("mas_cek_out")->where(['id' => $id])->get()->getRowArray();
+
+        if ($dataUser['approved_by'] == null) {
+            $data2 = [
+                'approved_by' => $data,
+                'update' =>  $data
+            ];
+            $this->db->table("mas_cek_out")->where(['id' => $id])->update($data2);
+            return ['stts' => true, 'msg' => 'berhasil di update...!'];
+        } else {
+            $data2 = [
+                'approved_by' => null,
+                'update' =>  $data
+            ];
+            $this->db->table("mas_cek_out")->where(['id' => $id])->update($data2);
+            return ['stts' => true, 'msg' => 'berhasil di update...!'];
+        }
+    }
+
+
     public function loginUsers($email, $password)
     {
         $dataUser = $this->db->table('user_app')->where(['email' => $email])->get()->getRowArray();
@@ -48,6 +73,15 @@ class RestApiModel extends Model
                         'stts' => true,
                         'msg' => "Berhasil login...!",
                         'key' => $this->getKey($dataUser['id']),
+                        'app' => 'security',
+                        'data' => $dataUser
+                    ];
+                } elseif ($dataUser['enable_hod_app'] == 1) {
+                    $pesan = [
+                        'stts' => true,
+                        'msg' => "Berhasil login...!",
+                        'key' => $this->getKey($dataUser['id']),
+                        'app' => 'myetowa',
                         'data' => $dataUser
                     ];
                 } else {
@@ -641,6 +675,50 @@ class RestApiModel extends Model
     }
 
 
+
+    public function getCekOut($stts)
+    {
+        if ($stts == "approve") {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->where("mas_cek_out.approved_by IS NOT NULL AND mas_cek_out.date_in IS NULL")
+                ->get()->getResultArray();
+            return [
+                'stts' => true,
+                'msg' => "data approve",
+                'data' => $data
+            ];
+        } elseif ($stts == "not_approve") {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->where("mas_cek_out.approved_by IS NULL ")
+                ->get()->getResultArray();
+            return [
+                'stts' => true,
+                'msg' => "data not approve",
+                'data' => $data
+            ];
+        } elseif ($stts == "finis") {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->where("mas_cek_out.approved_by IS NOT NULL AND mas_cek_out.date_out IS NOT NULL")
+                ->get()->getResultArray();
+            return [
+                'stts' => true,
+                'msg' => "data finis",
+                'data' => $data
+            ];
+        } else {
+            $data = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
+                ->get()->getResultArray();
+            return [
+                'stts' => true,
+                'msg' => "data All",
+                'data' => $data
+            ];
+        }
+    }
 
 
 

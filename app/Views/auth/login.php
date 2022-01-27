@@ -36,10 +36,10 @@
             </div>
         </form>
 
-        <p class="mb-0">
+        <!-- <p class="mb-0">
             <a href="<?= base_url('auth/register'); ?>" class="text-center">REGISTER</a><br />
 
-        </p>
+        </p> -->
     </div>
     <!-- /.card-body -->
 </div>

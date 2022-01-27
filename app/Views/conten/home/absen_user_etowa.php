@@ -38,7 +38,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>BET</th>
+                                    <th>Badge</th>
                                     <th>date</th>
                                     <th>time</th>
                                     <!-- <th>Action</th> -->

@@ -63,16 +63,16 @@
         <?= $this->renderSection('auth'); ?>
         <!-- /.card -->
         <p class="card p-0 mt-3">
-            <a href="<?= base_url('globalView/'); ?>">
+            <!-- <a href="<?= base_url('globalView/'); ?>">
                 <h5 class="text-right" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style: italic;">Hadiah PT Etowa</h5>
             </a>
 
             <a href="<?= base_url('globalView/absen_user'); ?>">
                 <h5 class="text-right " style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style: italic;">Absen Undian PT Etowa</h5>
-            </a>
+            </a> -->
 
             <a href="<?= base_url('globalView/absen_etowa'); ?>">
-                <h5 class="text-right" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style: italic;">Absen User</h5>
+                <h5 class="text-right" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-style: italic;">Absen Etowa</h5>
             </a>
         </p>
 

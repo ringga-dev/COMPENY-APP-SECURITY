@@ -159,7 +159,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">PT Etowa Packaging Indonesia</h1>
+                            <h1 class="m-0">PT. Etowa Packaging Indonesia</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -178,14 +178,14 @@
 
 
 
-        <!-- Main Footer -->
+        <!-- Main Footer
         <footer class="main-footer">
             <strong>Copyright On <a href="https://github.com/ringga-dev/"> admin of apps</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Time</b> <label id="jam"> </label>
             </div>
-        </footer>
+        </footer> -->
     </div>
     <!-- ./wrapper -->
 

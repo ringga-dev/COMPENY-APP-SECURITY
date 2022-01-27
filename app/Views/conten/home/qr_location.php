@@ -23,8 +23,6 @@
                             <div class="row text-right ml-2 mr-2">
                                 <select type="text" class="custom-select col mr-2" id="kategori" name="kategori">
                                     <option value="">Filter</option>
-
-
                                 </select>
                                 <button type="submit" class="btn btn-warning mr-2 center"><i class="fas fa-search fa-2x"></i></button>
                                 <a href="" class="btn btn-info mr-2 center" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-plus-square fa-2x"></i></a>

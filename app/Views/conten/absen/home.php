@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/datatables-buttons/css/fixedColumns.dataTables.min.css">
-
+    <title>PT Etowa </title>
     <!-- summernote -->
     <link rel="stylesheet" href="<?= base_url('tamplate/admin') ?>/plugins/summernote/summernote-bs4.min.css">
 
@@ -85,9 +85,12 @@
     <script src="<?= base_url('tamplate/admin'); ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
 
     <style>
-        html,
+        html {
+            background-color: #3B4E94;
+        }
+
         body {
-            height: 100%;
+            height: 00%;
         }
     </style>
 </head>
@@ -114,9 +117,8 @@
             <div class="col-lg-12" id="visitor">
                 <div class="card p-3 m-2 text-center" style=" background-color: #BCBCBD;">
                     <div class="form-group">
-                        <h2>HOME APP VISITOR</h2>
+                        <h2 style="color: black;"><strong>VISITOR SCAN</strong></h2>
                         <select class="custom-select custom-select-lg" id="visitor-data-satu" name="visitor-data-satu" required>
-                            <option>Open this select</option>
                             <option value="masuk">IN</option>
                             <option value="keluar">OUT</option>
                         </select>
@@ -130,9 +132,9 @@
             <div class="col-lg-12" id="absen">
                 <div class="card p-3 m-2 text-center" style=" background-color: #BCBCBD;">
                     <div class="form-group">
-                        <h2>HOME APP ABSEN</h2>
+                        <h2 style="color: black;"><strong>ABSEN</strong></h2>
 
-                        <h2 for="bet">BET QR :</h2>
+                        <h2 style="color: black;" for="bet">BADGE QR :</h2>
                         <input type="text" class="form-control text-center m-1" id="bet-absen" name="bet-absen" autofocus="autofocus">
                     </div>
                 </div>
@@ -141,16 +143,15 @@
             <div class="col-lg-12" id="izin">
                 <div class="card p-3 m-2 text-center" style=" background-color: #BCBCBD;">
                     <div class="form-group">
-                        <h2>HOME APP IZIN</h2>
+                        <h2 style="color: black;"> <strong>CEK OUT</strong> </h2>
 
                         <div class="card p-4" style=" background-color: #fff7;">
                             <div class="col-lg">
-                                <h4>STATUS </h4>
+                                <h4 style="color: black;">STATUS </h4>
                                 <div class=" row">
                                     <select class="custom-select custom-select-lg" id="stts_izin" name="stts_izin" required>
-                                        <option>Open this select</option>
-                                        <option value="in">IN</option>
-                                        <option value="out">OUT</option>
+                                        <option value="in">MASUK</option>
+                                        <option value="out">KELUAR</option>
                                     </select>
                                 </div>
                             </div>
@@ -158,9 +159,6 @@
                                 <input type="text" class="form-control text-center " id="bet_izin" name="bet_izin" autofocus="autofocus">
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -169,16 +167,15 @@
             <div class="col-lg-12" id="izin_lot">
                 <div class="card p-3 m-2 text-center" style=" background-color: #BCBCBD;">
                     <div class="form-group">
-                        <h2>HOME APP IZIN LOT</h2>
+                        <h2 style="color: black;"><strong>LOT 7 - LOT 1</strong> </h2>
                         <div class="card" style=" background-color: #fff7;">
                             <div class="card" style=" background-color: #fff1;">
-                                <h4 style="color: #994544;">STATUS </h4>
+                                <h4 style="color: #000;">STATUS </h4>
 
                                 <div class="col-lg">
                                     <select class="custom-select custom-select-lg mb-3" id="stts_lot_pos" name="stts_lot_pos">
-                                        <option selected>Open this select</option>
-                                        <option value="masuk">IN</option>
-                                        <option value="keluar">OUT</option>
+                                        <option value="masuk">MASUK</option>
+                                        <option value="keluar">KELUAR</option>
                                     </select>
                                 </div>
                             </div>
@@ -188,9 +185,7 @@
                                     <div class="row">
                                         <label for="lot7-to">FROM</label>
                                         <select class="custom-select custom-select-lg mb-3" id="lot-from" name="lot-from">
-                                            <option>Open this select</option>
                                             <option value="lot 7">LOT 7</option>
-                                            <option value="lot 1">LOT 1</option>
                                         </select>
                                     </div>
 
@@ -201,8 +196,6 @@
                                     <div class="row">
                                         <label for="lot7-to">TO</label>
                                         <select class="custom-select custom-select-lg mb-3" id="lot-to" name="lot-to">
-                                            <option>Open this select</option>
-                                            <option value="lot 7">LOT 7</option>
                                             <option value="lot 1">LOT 1</option>
                                         </select>
                                     </div>
@@ -224,8 +217,8 @@
                         <div class="row">
                             <button type="submit" id="menu_visito" class="btn btn-info col-lg m-3">VISITOR</button>
                             <button type="submit" id="menu_absen" class="btn btn-info col-lg m-3">ABSEN</button>
-                            <button type="submit" id="menu_izin" class="btn btn-info col-lg m-3">IZIN</button>
-                            <button type="submit" id="menu_izin_lot" class="btn btn-info col-lg m-3">IZIN LOT</button>
+                            <button type="submit" id="menu_izin" class="btn btn-info col-lg m-3">IZIN CEK OUT</button>
+                            <button type="submit" id="menu_izin_lot" class="btn btn-info col-lg m-3">LOT 1 - LOT 7</button>
                         </div>
 
                     </div>
@@ -368,23 +361,28 @@
                 });
             }
 
-            $("#stts_lot_pos").change(function() {
+            $("#stts_lot_pos").click(function() {
                 if ($("#stts_lot_pos").val() == "masuk") {
                     $("#send_izin_lot").show()
                     $("bet_izin_lot").focus()
                     $("#form-lokasi").hide()
                 } else {
+                    $("#send_izin_lot").show()
+                    $("bet_izin_lot").focus()
                     $("#form-lokasi").show()
-                    $("#send_izin_lot").hide()
+                    $("#to-lokasi").show()
+                    $("#stts_lot").show()
                 }
 
             })
 
-            $("#lot-from").change(function() {
+            $("#lot-from").click(function() {
                 $("#stts_lot").show()
+
+
             })
 
-            $("#lot-to").change(function() {
+            $("#lot-to").click(function() {
                 $("#send_izin_lot").show()
                 $("bet_izin_lot").focus()
             })
@@ -557,7 +555,7 @@
         function waktu() {
             var tanggal = new Date();
             setTimeout("waktu()", 1000);
-            document.getElementById("jam").innerHTML = `<h1  style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;color: #000;">${tanggal.getHours()} : ${tanggal.getMinutes()} : ${tanggal.getSeconds()}</h1>`
+            document.getElementById("jam").innerHTML = `<h1  style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;color: #fff;">${tanggal.getHours()} : ${tanggal.getMinutes()} : ${tanggal.getSeconds()}</h1>`
         }
     </script>
 </body>

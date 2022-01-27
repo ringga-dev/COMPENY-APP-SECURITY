@@ -303,7 +303,28 @@ class UserApi extends ResourceController
         return $this->respond($data, 200);
     }
 
-    //ajax function
+    public function get_cek_out()
+    {
+        $stts = $this->request->getPost('stts');
+        $data = $this->model->getCekOut($stts);
+        return $this->respond($data, 200);
+    }
+
+    public function set_approve()
+    {
+
+        $name = $this->request->getPost('name');
+        $id = $this->request->getVar('id');
+        $data = "$name " . " " . date("Y-M-d h:i:s A");
+
+
+        $data = $this->model->editFormCekout($id, $data);
+        // dd($pesan);
+        return $this->respond($data, 200);
+    }
+
+    /**Ajak funtion */
+
     public function ajax_form_cekout()
     {
         $badge = $this->request->getVar('badge');
@@ -350,4 +371,5 @@ class UserApi extends ResourceController
 
         return $this->respond($data, 200);
     }
+    /**end Ajak funtion */
 }

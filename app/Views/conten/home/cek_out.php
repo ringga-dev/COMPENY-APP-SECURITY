@@ -86,18 +86,7 @@
                                         <td class="text-center" <?= $color ?>><?= $u['from']; ?></td>
                                         <td class="text-center" <?= $color ?>><?= $u['to']; ?></td>
                                         <td class="text-center" <?= $color ?>>
-                                            <?php
-                                            if (!$u['approved_by']) {
-                                                if (session()->get('role') == "hod") {
-                                                    $url = base_url("admin/approve?id=" . $u['id']);
-                                                    echo "<a href='$url' class='badge badge-success m-1 approve'><i class='fas fa-thumbs-up fa-2x'></i></a>";
-                                                } else {
-                                                    echo $u['approved_by'];
-                                                }
-                                            } else {
-                                                echo $u['approved_by'];
-                                            }
-                                            ?>
+                                            <?= $u['approved_by']; ?>
                                         </td>
                                         <td class="text-center" <?= $color ?>><?= $u['date_in'] ? date('d-M-Y H:i:s', $u['date_in']) : "" ?></td>
                                         <td class="text-center" <?= $color ?>><?= $u['date_out'] ? date('d-M-Y H:i:s', $u['date_out']) : "" ?></td>
@@ -118,7 +107,7 @@
                                         <td class="text-center" <?= $color ?>>
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" <?= $u['is_active'] == "true" ? "checked" : "" ?> onclick="ganti_status(<?= $u['id'] ?>)">
-                                                <label class="form-check-label" for="exampleCheck1"><?= $u['is_active'] ?></label>
+
                                             </div>
                                         </td>
                                         <td class="text-center" <?= $color ?>>
@@ -126,6 +115,19 @@
                                             <?php if (session()->get('role') == 'admin') : ?>
                                                 <a href="<?= base_url() ?>/admin/delete_form_cekout?id=<?= $u['id']; ?>" class="badge badge-danger m-1 hapus"><i class="fas fa-trash-alt fa-2x"></i></a>
                                             <?php endif; ?>
+
+                                            <?php
+                                            $url = base_url("admin/approve?id=" . $u['id']);
+
+
+                                            if (session()->get('role') == "hod") {
+                                                if ($u['approved_by'] == null) {
+                                                    echo "<a href='$url' class='btn btn-success m-1 approve'>approve</a>";
+                                                } else {
+                                                    echo "<a href='$url' class='btn btn-danger m-1 approve'>disapprove</a>";
+                                                }
+                                            }
+                                            ?>
                                         </td>
                                         <!-- edit -->
                                         <div class="modal fade" id="modal-xl<?= $u['id'] ?>">
@@ -146,12 +148,16 @@
                                                                     <div class="card-body">
 
                                                                         <div class="form-group">
-                                                                            <label for="plan">Plan Time</label>
+                                                                            <label for="plan">Plan Time - End Time</label>
                                                                             <div class="input-group">
-                                                                                <input type="datetime-local" class="form-control" id="plan" name="plan" value="<?= $u['plan'] ?>" required>
+
+                                                                                <input type="date" style="margin-left: 3px; margin-right: 3px;" max='3000-06-16' class="form-control col-lg" id="planDate" name="planDate" required>
+                                                                                Start time :
+                                                                                <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="planTime" name="planTime" value="Out" required>
+                                                                                End Time :
+                                                                                <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="end_time" name="end_time" value="End" required>
                                                                             </div>
                                                                         </div>
-
                                                                         <div class="form-group">
                                                                             <label for="destination">Destination</label>
                                                                             <div class="input-group">
@@ -161,7 +167,7 @@
                                                                         <div class="form-group">
                                                                             <label for="Remarks">Remarks</label>
                                                                             <div class="input-group">
-                                                                                <input type="text" class="form-control" id="remarks" name="remarks" value="<?= $u['remarks'] ?>" required>
+                                                                                <input type="text" class="form-control" maxlength="50" id="remarks" name="remarks" value="<?= $u['remarks'] ?>" required>
                                                                             </div>
                                                                         </div>
 
@@ -240,6 +246,28 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card-body">
+
+                                <div class="form-group">
+                                    <label for="stts_form">Status Form</label>
+                                    <select type="text" class="custom-select mr-2" id="stts_form" name="stts_form" required>
+                                        <option selected>Open this select</option>
+                                        <option value="official">OFFICIAL</option>
+                                        <option value="personal">PERSONAL</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="plan">Plan Time - End Time</label>
+                                    <div class="input-group">
+
+                                        <input type="date" style="margin-left: 3px; margin-right: 3px;" max='3000-06-16' class="form-control col-lg" id="planDate" name="planDate" required>
+                                        Start time :
+                                        <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="planTime" name="planTime" value="Out" required>
+                                        End Time :
+                                        <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="end_time" name="end_time" value="End" required>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="nama_barang">name</label>
                                     <div class="input-group">
@@ -251,10 +279,17 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="plan">Plan Time</label>
+
+                                <div class="form-group" hidden>
+                                    <label for="from">From</label>
                                     <div class="input-group">
-                                        <input type="datetime-local" class="form-control" id="plan" name="plan" required>
+                                        <input type="text" class="form-control" id="from" name="from" value="PT. ETOWA PACKAGING INDONESIA" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="to">To</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="to" name="to" required>
                                     </div>
                                 </div>
 
@@ -267,29 +302,7 @@
                                 <div class="form-group">
                                     <label for="Remarks">Remarks</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="remarks" name="remarks" required>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="stts_form">Status Form</label>
-                                    <select type="text" class="custom-select mr-2" id="stts_form" name="stts_form" required>
-                                        <option selected>Open this select</option>
-                                        <option value="official">OFFICIAL</option>
-                                        <option value="personal">PERSONAL</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="from">From</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="from" name="from" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="to">To</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="to" name="to" required>
+                                        <input type="text" class="form-control" maxlength="50" id="remarks" name="remarks" required>
                                     </div>
                                 </div>
 

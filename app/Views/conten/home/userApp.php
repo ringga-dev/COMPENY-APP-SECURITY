@@ -24,6 +24,7 @@
                                     <input type="file" class="form-control-file col" name="fileexcel" id="fileexcel">
                                     <button class="btn btn-primary " type="submit">Upload</button>
                                     <a href="<?= base_url('exp_file/data.xlsx') ?>" class="btn btn-info mr-2 ml-2 center"><i class="fas fa-download fa-2x"></i></a>
+
                                 </div>
                             </form>
 
@@ -75,6 +76,7 @@
 
                                         <td class="text-center">
                                             <a href="" class="badge badge-warning m-1" data-toggle="modal" data-target="#modal-xl<?= $u['id'] ?>"><i class="fas fa-edit fa-2x"></i></a>
+                                            <a target="_blank" href="<?= base_url('admin/generate_badge?name=' . $u['name'] . "&badge=" . $u['id_bet'] . "&action=userApp"); ?>" class="badge badge-success mr-2 center"><i class="fas fa-file-pdf fa-2x"></i></a>
                                             <?php
                                             if (session()->get('role') == "admin") :
                                             ?>

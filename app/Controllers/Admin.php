@@ -18,6 +18,8 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Imagick;
+use Mpdf\Gif\Image;
 
 class Admin extends BaseController
 {
@@ -147,7 +149,7 @@ class Admin extends BaseController
             // 'log' => $this->request->getVar('long') . ", " . $this->request->getVar('lat')
         ];
 
-
+        //membuat image gambar
         $data = $this->admin->saveQRlokasi($data1);
         if ($data['stts'] == true) {
             $writer = new PngWriter();
@@ -328,6 +330,7 @@ class Admin extends BaseController
         return view('conten/home/user_scan', $data);
     }
 
+    //menambah user
     public function action_user()
     {
         $password = 123456;
@@ -600,7 +603,7 @@ class Admin extends BaseController
             'visitor' =>  $this->admin->getFormCekout($badge, $date),
             'user' => $this->admin->getUserApp(),
         ];
-        // dd($this->request->getVar('filter'));
+        // dd($data);
         return view('conten/home/cek_out', $data);
     }
 
@@ -608,7 +611,8 @@ class Admin extends BaseController
     {
         $data = [
             'badge' => $this->request->getVar('badge'),
-            'plan' => $this->request->getVar('plan'),
+            'plan' => $this->request->getVar('planDate') . " " . $this->request->getVar('planTime'),
+            'end_time' => $this->request->getVar('end_time'),
             'destination' => $this->request->getVar('destination'),
             'remarks' => $this->request->getVar('remarks'),
             'stts_form' => $this->request->getVar('stts_form'),
@@ -626,6 +630,7 @@ class Admin extends BaseController
 
     public function approve()
     {
+
         $sesion = session()->get('data');
         $id = $this->request->getVar('id');
         $data = [
@@ -634,6 +639,7 @@ class Admin extends BaseController
         ];
 
         $pesan = $this->admin->editFormCekout($id, $data);
+        // dd($pesan);
         session()->setFlashdata('pesan', $pesan);
         return redirect()->to('/admin/cek_out');
     }
@@ -652,7 +658,8 @@ class Admin extends BaseController
         $sesion = session()->get('data');
         $id = $this->request->getVar('id');
         $data = [
-            'plan' => $this->request->getVar('plan'),
+            'plan' => $this->request->getVar('planDate') . " " . $this->request->getVar('planTime'),
+            'end_time' => $this->request->getVar('end_time'),
             'destination' => $this->request->getVar('destination'),
             'remarks' => $this->request->getVar('remarks'),
             'stts_form' => $this->request->getVar('stts_form'),
@@ -663,5 +670,53 @@ class Admin extends BaseController
         $pesan = $this->admin->editFormCekout($id, $data);
         session()->setFlashdata('pesan', $pesan);
         return redirect()->to('/admin/cek_out');
+    }
+
+
+    public function generate_badge()
+    {
+        if ($this->request->getVar('action') == 'visitor') {
+
+            $id = $this->request->getVar('id');
+            $data = $this->admin->getVisitorPrint($id);
+
+            // dd($data);
+            return view("conten/print/output_card_visitor", $data);
+        } elseif ($this->request->getVar('action') == 'userApp') {
+            $badge = $this->request->getVar('badge');
+            $name = $this->request->getVar('name');
+
+            $writer = new PngWriter();
+
+            // Create QR code
+            $qrCode = QrCode::create(trim($badge))
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+                ->setSize(300)
+                ->setMargin(10)
+                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setForegroundColor(new Color(0, 0, 0))
+                ->setBackgroundColor(new Color(255, 255, 255));
+
+            $result = $writer->write($qrCode);
+
+            // Save it to a file
+            $nama = trim($name);
+            $result->saveToFile("assets/image/gr-user/$nama.png");
+            $data = ['file' => "assets/image/gr-user/$nama.png", 'badge' => $badge, 'name' => $this->request->getVar('name')];
+
+            return view("conten/print/output_card", $data);
+            $path = "assets/image/gr-user/$nama.png";
+
+
+            chmod(
+                $path,
+                0777
+            );
+            unlink($path);
+        } else {
+            session()->setFlashdata('pesan', ['stts' => false, 'msg' => 'Opss terjadi kesalahan pada file...!']);
+            return redirect()->to('/home');
+        }
     }
 }

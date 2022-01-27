@@ -519,13 +519,32 @@ class AdminModel extends Model
 
     public function editFormCekout($id, $data)
     {
-        $this->db->table("mas_cek_out")->where(['id' => $id])->update($data);
-        return ['stts' => true, 'msg' => 'berhasil di update...!'];
+        $sesion = session()->get('data');
+
+        $dataUser = $this->db->table("mas_cek_out")->where(['id' => $id])->get()->getRowArray();
+
+        if ($dataUser['approved_by'] == null) {
+            $this->db->table("mas_cek_out")->where(['id' => $id])->update($data);
+            return ['stts' => true, 'msg' => 'berhasil di update...!'];
+        } else {
+            $data2 = [
+                'approved_by' => null,
+                'update' =>  $sesion['fullname'] . " " . date("Y-M-d h:i:s A")
+            ];
+            $this->db->table("mas_cek_out")->where(['id' => $id])->update($data2);
+            return ['stts' => true, 'msg' => 'berhasil di update...!'];
+        }
     }
 
     public function deleteFormCekout($id)
     {
         $this->db->table("mas_cek_out")->where(['id' => $id])->delete();
         return ['stts' => true, 'msg' => 'berhasil di delete...!'];
+    }
+
+
+    public function getVisitorPrint($id)
+    {
+        return $this->db->table('list_visitor')->where(['id' => $id])->get()->getRowArray();
     }
 }
