@@ -41,11 +41,29 @@ class AdminModel extends Model
             return ['stts' => true, 'msg' => 'Akses di berikan...!'];
         }
     }
+    public function aksesBlok_userAppHod($id)
+    {
+        $data = $this->db->table('user_app')->where(['id' => $id])->get()->getRowArray();
+        if ($data['enable_hod_app'] == 1) {
+            $this->db->table('user_app')->where(['id' => $id])->update(['enable_hod_app' => 2]);
+            return ['stts' => false, 'msg' => 'Akses di blok...!'];
+        } else {
+            $this->db->table('user_app')->where(['id' => $id])->update(['enable_hod_app' => 1]);
+            return ['stts' => true, 'msg' => 'Akses di berikan...!'];
+        }
+    }
 
     public function getUserApp()
     {
-        return $this->db->table('user_app')->get()->getResultArray();
+        return $this->db->table('user_app')->where("stts_kerja IS NULL")->get()->getResultArray();
     }
+
+
+    public function getUserAppHarian()
+    {
+        return $this->db->table('user_app')->where("user_app.stts_kerja='HL'")->get()->getResultArray();
+    }
+
 
 
     public function getUserSecurity()
@@ -515,6 +533,28 @@ class AdminModel extends Model
         }
 
         return $data;
+    }
+    public function getDevisi()
+    {
+        return $this->db->table("tblweb_privilege")->get()->getResultArray();
+    }
+
+    public function addDevisi($devisi)
+    {
+        $this->db->table("tblweb_privilege")->insert(["privilege_name" => $devisi]);
+        return ['stts' => true, 'msg' => 'berhasil di tambahkan...!'];
+    }
+
+    public function editDevisi($id, $devisi)
+    {
+        $this->db->table("tblweb_privilege")->where(['id' => $id])->update(['privilege_name' => $devisi]);
+        return ['stts' => true, 'msg' => 'berhasil di edit...!'];
+    }
+
+    public function deleteDevisi($id)
+    {
+        $this->db->table("tblweb_privilege")->where(['id' => $id])->delete();
+        return ['stts' => true, 'msg' => 'berhasil di delete...!'];
     }
 
     public function editFormCekout($id, $data)

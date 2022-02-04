@@ -48,3 +48,17 @@ function  cek_blok_userApp($id)
         echo "";
     }
 }
+
+function  cek_blok_userAppHOD($id)
+{
+
+    $db = \Config\Database::connect();
+
+    $data = $db->table('user_app')->where(['id' => $id])->get()->getRowArray();
+
+    if ($data['enable_hod_app'] == 1) {
+        echo "checked";
+    } else {
+        echo "";
+    }
+}

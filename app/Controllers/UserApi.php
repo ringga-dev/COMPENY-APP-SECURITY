@@ -48,8 +48,9 @@ class UserApi extends ResourceController
     {
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
+        $apps = $this->request->getPost('apps');
 
-        $data = $this->model->loginUsers($email, $password);
+        $data = $this->model->loginUsers($email, $password, $apps);
 
         return $this->respond($data, 200);
     }
@@ -58,7 +59,8 @@ class UserApi extends ResourceController
     public function login_bet()
     {
         $bet = $this->request->getPost('id_bet');
-        $data = $this->model->loginScan($bet);
+        $apps = $this->request->getPost('apps');
+        $data = $this->model->loginScan($bet, $apps);
         return $this->respond($data, 200);
     }
 
@@ -317,7 +319,6 @@ class UserApi extends ResourceController
         $id = $this->request->getVar('id');
         $data = "$name " . " " . date("Y-M-d h:i:s A");
 
-
         $data = $this->model->editFormCekout($id, $data);
         // dd($pesan);
         return $this->respond($data, 200);
@@ -370,6 +371,12 @@ class UserApi extends ResourceController
         $data = $this->model->ajaxScanVisitor($qr_code, $stts);
 
         return $this->respond($data, 200);
+    }
+
+    public function failed_for_finger()
+    {
+        $date = $this->request->getVar('date') ? $this->request->getVar('date') : date("Y");
+        return $this->respond($this->model->getFailedForFinger($date), 200);
     }
     /**end Ajak funtion */
 }

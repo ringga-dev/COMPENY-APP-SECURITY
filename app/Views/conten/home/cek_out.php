@@ -151,11 +151,11 @@
                                                                             <label for="plan">Plan Time - End Time</label>
                                                                             <div class="input-group">
 
-                                                                                <input type="date" style="margin-left: 3px; margin-right: 3px;" max='3000-06-16' class="form-control col-lg" id="planDate" name="planDate" required>
+                                                                                <input type="date" style="margin-left: 3px; margin-right: 3px;" max='3000-06-16' value="<?= date('Y-m-d', strtotime($u['plan'])) ?>" class="form-control col-lg" id="planDate" name="planDate" required>
                                                                                 Start time :
-                                                                                <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="planTime" name="planTime" value="Out" required>
+                                                                                <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" value="<?= date('H:i:s', strtotime($u['plan'])) ?>" id="planTime" name="planTime" value="Out" required>
                                                                                 End Time :
-                                                                                <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="end_time" name="end_time" value="End" required>
+                                                                                <input type="time" style="margin-left: 3px; margin-right: 3px;" class="form-control col-lg" id="end_time" value="<?= date('H:i:s', strtotime($u['end_time'])) ?>" name="end_time" value="End" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">

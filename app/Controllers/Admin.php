@@ -100,6 +100,14 @@ class Admin extends BaseController
         $data = $this->admin->aksesBlok_userApp($id);
         return json_encode($data);
     }
+    public function blok_akses_userapp_hod()
+    {
+
+        $id = $this->request->getVar('id');
+
+        $data = $this->admin->aksesBlok_userAppHod($id);
+        return json_encode($data);
+    }
     // menampilkan user aplikasi
     public function user_app()
     {
@@ -492,6 +500,7 @@ class Admin extends BaseController
                 'email' => $row[3],
                 'no_phone' => $row[4],
                 'devisi' => $row[5],
+                'section' => $row[7],
                 'password' => $password_hash,
                 'image' => 'user.jpg',
                 'enable_login' => 0,
@@ -607,6 +616,42 @@ class Admin extends BaseController
         return view('conten/home/cek_out', $data);
     }
 
+    //devisi
+    public function devisi()
+    {
+
+        $data = [
+            'title' => 'Managemen Devisi',
+            'visitor' =>  $this->admin->getDevisi(),
+        ];
+        // dd($data);
+        return view('conten/home/devisi', $data);
+    }
+
+    public function add_devisi()
+    {
+        $devisi = $this->request->getVar('privilege_name');
+        $pesan = $this->admin->addDevisi($devisi);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/devisi');
+    }
+
+    public function edit_devisi($id)
+    {
+        $devisi = $this->request->getVar('privilege_name');
+        $pesan = $this->admin->editDevisi($id, $devisi);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/devisi');
+    }
+
+    public function delete_devisi($id)
+    {
+        $pesan = $this->admin->deleteDevisi($id);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/devisi');
+    }
+
+
     public function add_form_cekout()
     {
         $data = [
@@ -718,5 +763,63 @@ class Admin extends BaseController
             session()->setFlashdata('pesan', ['stts' => false, 'msg' => 'Opss terjadi kesalahan pada file...!']);
             return redirect()->to('/home');
         }
+    }
+
+
+    public function user_harian()
+    {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
+        $data = [
+            'title' => 'Managemen User App',
+            'user' => $this->admin->getUserAppHarian(),
+        ];
+        return view('conten/home/userHarian', $data);
+    }
+    //menambah user
+    public function action_user_harian()
+    {
+        $password = 123456;
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+        $sesi = session()->get('data');
+        $dataRegister = [
+            'name' => $this->request->getPost('name'),
+            'id_bet' => $this->request->getPost('id_finger'),
+            'id_finger' => $this->request->getPost('id_finger'),
+            'email' => $this->request->getPost('email'),
+            'no_phone' => $this->request->getPost('no_phone'),
+            'devisi' => $this->request->getPost('devisi'),
+            'password' => $password_hash,
+            'image' => 'user.jpg',
+            'enable_login' => 0,
+            'created' => date("Y-M-d h:i:s A"),
+            'created_by' => $sesi['username'],
+        ];
+
+        $data = $this->admin->addUsers($dataRegister);
+        session()->setFlashdata('pesan', $data);
+        return redirect()->to('/admin/user_app');
+    }
+
+    public function edit_userAppHarian($id)
+    {
+
+        $sesi = session()->get('data');
+        $dataRegister = [
+            'name' => $this->request->getPost('name'),
+            'id_bet' => $this->request->getPost('id_finger'),
+            'id_finger' => $this->request->getPost('id_finger'),
+            'email' => $this->request->getPost('email'),
+            'no_phone' => $this->request->getPost('no_phone'),
+            'devisi' => 0,
+            'update_by' =>  date("Y-M-d h:i:s A") . " By " . $sesi['username'],
+        ];
+
+        $data = $this->admin->updateUsers($id, $dataRegister);
+        session()->setFlashdata('pesan', $data);
+        return redirect()->to('/admin/user_app');
     }
 }

@@ -88,6 +88,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script src="<?= base_url('tamplate/admin') ?>/plugins/datatables-buttons/js/dataTables.fixedColumns.min.js"></script>
 
+    <script src="<?= base_url('tamplate/admin') ?>/plugins/chart.js/Chart.min.js"></script>
+
     <!-- C:\xampp\htdocs\mobile\public\assest\js\daterangepicker.css -->
     <!-- Latest compiled and minified JavaScript -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->

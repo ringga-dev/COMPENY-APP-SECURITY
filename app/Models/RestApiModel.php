@@ -41,7 +41,6 @@ class RestApiModel extends Model
 
     public function editFormCekout($id, $data)
     {
-        $sesion = session()->get('data');
 
         $dataUser = $this->db->table("mas_cek_out")->where(['id' => $id])->get()->getRowArray();
 
@@ -53,48 +52,96 @@ class RestApiModel extends Model
             $this->db->table("mas_cek_out")->where(['id' => $id])->update($data2);
             return ['stts' => true, 'msg' => 'berhasil di update...!'];
         } else {
-            $data2 = [
-                'approved_by' => null,
-                'update' =>  $data
-            ];
-            $this->db->table("mas_cek_out")->where(['id' => $id])->update($data2);
-            return ['stts' => true, 'msg' => 'berhasil di update...!'];
+            if ($dataUser['date_out']) {
+                return ['stts' => false, 'msg' => 'Update gagal dilakukan, /n user sudah di perjalanan,atau telah menyelesaikan sesi..!'];
+            } else {
+                $data2 = [
+                    'approved_by' => null,
+                    'update' =>  $data
+                ];
+                $this->db->table("mas_cek_out")->where(['id' => $id])->update($data2);
+                return ['stts' => true, 'msg' => 'berhasil di update...!'];
+            }
         }
     }
 
 
-    public function loginUsers($email, $password)
+    public function loginUsers($email, $password, $apps)
     {
         $dataUser = $this->db->table('user_app')->where(['email' => $email])->get()->getRowArray();
         if ($dataUser) {
-            if ($dataUser['enable_login'] == 1) {
-                if (password_verify($password, $dataUser['password'])) {
-                    $pesan = [
-                        'stts' => true,
-                        'msg' => "Berhasil login...!",
-                        'key' => $this->getKey($dataUser['id']),
-                        'app' => 'security',
-                        'data' => $dataUser
-                    ];
-                } elseif ($dataUser['enable_hod_app'] == 1) {
-                    $pesan = [
-                        'stts' => true,
-                        'msg' => "Berhasil login...!",
-                        'key' => $this->getKey($dataUser['id']),
-                        'app' => 'myetowa',
-                        'data' => $dataUser
-                    ];
+
+            if ($apps == 'security') {
+                if ($dataUser['enable_login'] == 1) {
+                    if (password_verify($password, $dataUser['password'])) {
+                        $pesan = [
+                            'stts' => true,
+                            'msg' => "Berhasil login...!",
+                            'key' => $this->getKey($dataUser['id']),
+                            'app' => 'security',
+                            'data' => $dataUser
+                        ];
+                    } else {
+                        $pesan = [
+                            'stts' => false,
+                            'msg' => "password salah...!",
+                        ];
+                    }
                 } else {
                     $pesan = [
                         'stts' => false,
-                        'msg' => "password salah...!",
+                        'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
+                    ];
+                }
+            } elseif ($apps == 'myetowa') {
+                if ($dataUser['enable_hod_app'] == 1) {
+                    if (password_verify($password, $dataUser['password'])) {
+                        $pesan = [
+                            'stts' => true,
+                            'msg' => "Berhasil login...!",
+                            'key' => $this->getKey($dataUser['id']),
+                            'app' => 'myetowa',
+                            'data' => $dataUser
+                        ];
+                    } else {
+                        $pesan = [
+                            'stts' => false,
+                            'msg' => "password salah...!",
+                        ];
+                    }
+                } else {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
                     ];
                 }
             } else {
-                $pesan = [
-                    'stts' => false,
-                    'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
-                ];
+                // $pesan = [
+                //     'stts' => false,
+                //     'msg' => "OPS..!, \n aplikasi yang di tuju tidak ada...!",
+                // ];
+
+                if ($dataUser['enable_login'] == 1) {
+                    if (password_verify($password, $dataUser['password'])) {
+                        $pesan = [
+                            'stts' => true,
+                            'msg' => "Berhasil login...!",
+                            'key' => $this->getKey($dataUser['id']),
+                            'app' => 'security',
+                            'data' => $dataUser
+                        ];
+                    } else {
+                        $pesan = [
+                            'stts' => false,
+                            'msg' => "password salah...!",
+                        ];
+                    }
+                } else {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
+                    ];
+                }
             }
         } else {
             $pesan = [
@@ -106,15 +153,80 @@ class RestApiModel extends Model
     }
 
 
-    public function loginScan($bet)
+    public function loginScan($bet, $apps)
     {
         $dataUser = $this->db->table('user_app')->where(['id_bet' => $bet])->get()->getRowArray();
         if ($dataUser) {
+
+
+            if ($apps == 'security') {
+                if ($dataUser['enable_login'] == 1) {
+
+                    $pesan = [
+                        'stts' => true,
+                        'msg' => "Berhasil login...!",
+                        'key' => $this->getKey($dataUser['id']),
+                        'app' => 'security',
+                        'data' => $dataUser
+                    ];
+                } else {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
+                    ];
+                }
+            } elseif ($apps == 'myetowa') {
+                if ($dataUser['enable_hod_app'] == 1) {
+
+                    $pesan = [
+                        'stts' => true,
+                        'msg' => "Berhasil login...!",
+                        'key' => $this->getKey($dataUser['id']),
+                        'app' => 'myetowa',
+                        'data' => $dataUser
+                    ];
+                } else {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
+                    ];
+                }
+            } else {
+                // $pesan = [
+                //     'stts' => false,
+                //     'msg' => "OPS..!, \n aplikasi yang di tuju tidak ada...!",
+                // ];
+
+                if ($dataUser['enable_login'] == 1) {
+
+                    $pesan = [
+                        'stts' => true,
+                        'msg' => "Berhasil login...!",
+                        'key' => $this->getKey($dataUser['id']),
+                        'app' => 'security',
+                        'data' => $dataUser
+                    ];
+                } else {
+                    $pesan = [
+                        'stts' => false,
+                        'msg' => "OPS..!, \n akses anda mungkin sudah di blok...!",
+                    ];
+                }
+            }
+
             if ($dataUser['enable_login'] == 1) {
                 $pesan = [
                     'stts' => true,
                     'msg' => "Berhasil login...!",
                     'key' => $this->getKey($dataUser['id']),
+                    'data' => $dataUser
+                ];
+            } elseif ($dataUser['enable_hod_app'] == 1) {
+                $pesan = [
+                    'stts' => true,
+                    'msg' => "Berhasil login...!",
+                    'key' => $this->getKey($dataUser['id']),
+                    'app' => 'myetowa',
                     'data' => $dataUser
                 ];
             } else {
@@ -623,6 +735,7 @@ class RestApiModel extends Model
         $tahun = $date1[0];
         $bulan = $date1[1];
         $tgl = $date1[2];
+
         $cek = $this->db->table("mas_cek_out")->select("mas_cek_out.*, user_app.name")
             ->join('user_app', 'user_app.id_bet = mas_cek_out.badge')
             ->where(['badge' => $badge])
@@ -632,7 +745,7 @@ class RestApiModel extends Model
             ->get()
             ->getRowArray();
 
-        if ($cek == null) {
+        if (!$cek) {
             return ['stts' => false, 'msg' => 'izin mungkin belum di setujui atau di buat...!'];
         }
 
@@ -718,6 +831,44 @@ class RestApiModel extends Model
                 'data' => $data
             ];
         }
+    }
+
+    public function getFailedForFinger($date)
+    {
+
+
+        $failedForFinger = [];
+        $izinLot = [];
+        $listPatrol = [];
+        $LateUserMasuk = [];
+        $LateUserBreak = [];
+        for ($i = 1; $i <= 12; $i++) {
+            if ($i < 10) {
+                $bulan = "0$i";
+            } else {
+                $bulan = "$i";
+            }
+            $bulananfff = $this->db->query("SELECT * FROM `mas_failed_for_finger` WHERE `date` LIKE '$date-$bulan-%'")->getResultArray();
+            $bulananIzinLot = $this->db->query("SELECT * FROM `mas_user_scan` WHERE `date` LIKE '$date-$bulan-%'")->getResultArray();
+            $bulananlistPatrol = $this->db->query("SELECT * FROM `list_patrol` WHERE `tgl` LIKE '$date-$bulan-%'")->getResultArray();
+            $bulananLateUserMasuk = $this->db->query("SELECT * FROM `mas_late_user` WHERE `date` LIKE '$date-$bulan-%' AND `stts` = 1")->getResultArray();
+            $bulananLateUserBreak = $this->db->query("SELECT * FROM `mas_late_user` WHERE `date` LIKE '$date-$bulan-%' AND `stts` = 2")->getResultArray();
+            array_push($failedForFinger,  count($bulananfff));
+            array_push($izinLot, count($bulananIzinLot));
+            array_push($listPatrol, count($bulananlistPatrol));
+            array_push($LateUserMasuk, count($bulananLateUserMasuk));
+            array_push($LateUserBreak, count($bulananLateUserBreak));
+        }
+
+        return [
+            "FailedForFinger" => $failedForFinger,
+            "IzinLot" => $izinLot,
+            "ListPatrol" => $listPatrol,
+            "LateUser" => [
+                "LateUserMasuk" => $LateUserMasuk,
+                "LateUserBreak" => $LateUserBreak
+            ],
+        ];
     }
 
 
