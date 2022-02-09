@@ -355,6 +355,7 @@ class Admin extends BaseController
             'password' => $password_hash,
             'image' => 'user.jpg',
             'enable_login' => 0,
+            'enable_hod_app' => 0,
             'created' => date("Y-M-d h:i:s A"),
             'created_by' => $sesi['username'],
         ];
@@ -547,6 +548,35 @@ class Admin extends BaseController
         // dd($data);
 
         return view('conten/home/absen_user_etowa', $data);
+    }
+    public function absen_user_harian()
+    {
+        $role = session()->get('role');
+        if ($role != "admin") {
+            return redirect()->to('/home');
+        }
+
+        // $bil = 124; // Inisialisasi variabel bil dengan nilai 10
+
+        // if ($bil % 2 == 0) { //Kondisi
+        //     echo "$bil Merupakan Bilangan Genap"; //Kondisi true
+        // } else {
+        //     echo "$bil Merupakan Bilangan Ganjil"; //Kondisi false
+        // }
+
+        // $kalender = CAL_GREGORIAN;
+        // $bulan = date("m");
+        // $tahun = date("Y");
+        // echo cal_days_in_month($kalender, $bulan, $tahun);
+        $data = [
+            'title' => 'Managemen User Gagal Finger',
+            'absen' => $this->admin->getAbsenHarian($this->request->getVar('users') ? $this->request->getVar('users') : "all", $this->request->getVar('filter') ? $this->request->getVar('filter') : "all"),
+            'user' => $this->admin->getUserAppHarian(),
+
+        ];
+        // dd($data);
+
+        return view('conten/home/absen_user_harian', $data);
     }
 
 
@@ -764,6 +794,52 @@ class Admin extends BaseController
             return redirect()->to('/home');
         }
     }
+    public function generate_badge_harian()
+    {
+        if ($this->request->getVar('action') == 'visitor') {
+
+            $id = $this->request->getVar('id');
+            $data = $this->admin->getVisitorPrint($id);
+
+            // dd($data);
+            return view("conten/print/output_card_visitor", $data);
+        } elseif ($this->request->getVar('action') == 'userApp') {
+            $badge = $this->request->getVar('badge');
+            $name = $this->request->getVar('name');
+
+            $writer = new PngWriter();
+
+            // Create QR code
+            $qrCode = QrCode::create(trim($badge))
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+                ->setSize(300)
+                ->setMargin(10)
+                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setForegroundColor(new Color(0, 0, 0))
+                ->setBackgroundColor(new Color(255, 255, 255));
+
+            $result = $writer->write($qrCode);
+
+            // Save it to a file
+            $nama = trim($name);
+            $result->saveToFile("assets/image/gr-user/$nama.png");
+            $data = ['file' => "assets/image/gr-user/$nama.png", 'badge' => $badge, 'name' => $this->request->getVar('name')];
+
+            return view("conten/print/output_card_harian", $data);
+            $path = "assets/image/gr-user/$nama.png";
+
+
+            chmod(
+                $path,
+                0777
+            );
+            unlink($path);
+        } else {
+            session()->setFlashdata('pesan', ['stts' => false, 'msg' => 'Opss terjadi kesalahan pada file...!']);
+            return redirect()->to('/home');
+        }
+    }
 
 
     public function user_harian()
@@ -787,39 +863,48 @@ class Admin extends BaseController
         $sesi = session()->get('data');
         $dataRegister = [
             'name' => $this->request->getPost('name'),
-            'id_bet' => $this->request->getPost('id_finger'),
-            'id_finger' => $this->request->getPost('id_finger'),
+            'id_bet' => $this->request->getPost('id_bet'),
+            'id_finger' => $this->request->getPost('id_bet'),
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
             'password' => $password_hash,
             'image' => 'user.jpg',
             'enable_login' => 0,
+            'enable_hod_app' => 0,
+            'stts_kerja' => 'HL',
             'created' => date("Y-M-d h:i:s A"),
             'created_by' => $sesi['username'],
         ];
 
         $data = $this->admin->addUsers($dataRegister);
         session()->setFlashdata('pesan', $data);
-        return redirect()->to('/admin/user_app');
+        return redirect()->to('/admin/user_harian');
     }
 
     public function edit_userAppHarian($id)
     {
-
         $sesi = session()->get('data');
         $dataRegister = [
             'name' => $this->request->getPost('name'),
-            'id_bet' => $this->request->getPost('id_finger'),
-            'id_finger' => $this->request->getPost('id_finger'),
+            'id_bet' => $this->request->getPost('id_bet'),
+            'id_bet' => $this->request->getPost('id_bet'),
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
-            'devisi' => 0,
+            'devisi' => $this->request->getPost('devisi'),
             'update_by' =>  date("Y-M-d h:i:s A") . " By " . $sesi['username'],
         ];
 
         $data = $this->admin->updateUsers($id, $dataRegister);
         session()->setFlashdata('pesan', $data);
-        return redirect()->to('/admin/user_app');
+        return redirect()->to('/admin/user_harian');
+    }
+
+    public function bpjs_user($badge)
+    {
+        $nominal = $this->request->getVar('nominal');
+        $data = $this->admin->updateBpjs($badge, $nominal);
+        session()->setFlashdata('pesan', $data);
+        return redirect()->to('/admin/user_harian');
     }
 }

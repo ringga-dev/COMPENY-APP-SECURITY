@@ -17,8 +17,6 @@
         .card {
             background-color: #ffffff;
             max-width: 600px;
-            height: 860px;
-            max-height: 942px;
             padding: 30px;
             border-radius: 10px;
             border: 4px solid #000;
@@ -36,8 +34,9 @@
             width: 80%;
             padding-left: 20px;
             padding-right: 20px;
-            padding-bottom: 20px;
-
+            padding-bottom: 0px;
+            padding-top: 0px;
+            margin: 10px;
             border-radius: 10%;
         }
 
@@ -80,6 +79,7 @@
 
         #capture {
             width: max-content;
+            height: max-content;
         }
     </style>
 
@@ -89,49 +89,6 @@
     <div id="capture">
         <table id="table_ui">
             <tr>
-                <!-- <td>
-                    <div class="card">
-                        <table>
-                            <tr>
-                                <td style="width: 10%;">
-
-                                    <img class="image_logo" src="<?= base_url("assest/logo/etw-color-Big.png") ?>" style="width: 100%;" alt="image" />
-                                </td>
-                                <td>
-                                    <h5 style="color: #333A7C;">PT. ETOWA PACKAGING INDONESIA</h4>
-
-                                </td>
-                            </tr>
-                        </table>
-
-                        <img class="image_profile" src="<?= base_url("tamplate/undian/assets/img/portfolio/cabin.png") ?>" width="100%" alt="image" />
-                        <h1>VISITOR</h1>
-                        <table>
-                            <tr>
-                                <td style="width: 30%;"><strong>Name</strong></td>
-                                <td>:Ringga Septia Pribadi</td>
-                            </tr>
-
-                            <tr>
-                                <td style="width: 30%;"><strong>Campeny</strong></td>
-                                <td>:all</td>
-                            </tr>
-                            <tr>
-                                <td style="width: 30%;"><strong>Designation</strong></td>
-                                <td>:Kunjungan</td>
-                            </tr>
-                            <tr>
-                                <td style="width: 30%;"><strong>Meet</strong></td>
-                                <td>:IT </td>
-                            </tr>
-                            <tr>
-                                <td style="width: 30%;"><strong>Plan</strong></td>
-                                <td>:20-12-2000 21:21 </td>
-                            </tr>
-                        </table>
-
-                    </div>
-                </td> -->
                 <td>
                     <div class="card">
                         <table>
@@ -146,15 +103,13 @@
                             </tr>
                         </table>
                         <img class="image_profile_qr" src="<?= base_url() . "/" . $file ?>" alt="image" />
+                        <h3><strong>HARIAN</strong></h3>
                         <h2><strong><?= $name ?></strong></h2>
                         <h5><?= $badge ?></h5>
                     </div>
                 </td>
             </tr>
         </table>
-
-
-
 
     </div>
 
@@ -164,7 +119,7 @@
         html2canvas(document.querySelector("#capture")).then(canvas => {
             var link = document.createElement("a");
             document.body.appendChild(link);
-            link.download = "html_image.png";
+            link.download = "<?= $name ?>.png";
             link.href = canvas.toDataURL("image/png");
             link.target = '_blank';
             link.click();

@@ -61,7 +61,7 @@ class AdminModel extends Model
 
     public function getUserAppHarian()
     {
-        return $this->db->table('user_app')->where("user_app.stts_kerja='HL'")->get()->getResultArray();
+        return $this->db->table('user_app')->where(['stts_kerja' => "HL"])->get()->getResultArray();
     }
 
 
@@ -402,8 +402,6 @@ class AdminModel extends Model
 
     public function getAbsenEtowaFile($date)
     {
-
-
         $tgl = explode(" - ", $date);
         $dari = date('Y-m-d', strtotime($tgl[0]));
         $ke = date('Y-m-d', strtotime($tgl[1]));
@@ -586,5 +584,108 @@ class AdminModel extends Model
     public function getVisitorPrint($id)
     {
         return $this->db->table('list_visitor')->where(['id' => $id])->get()->getRowArray();
+    }
+
+
+    public function getAbsenHarian($user = 'all', $date = 'all')
+    {
+        if ($user == 'all' && $date == 'all') {
+            $tgl = explode("-", date('Y-m'));
+            $tahun = $tgl[0];
+            $bulan = $tgl[1];
+            $data = $this->db->table('mas_absen_user_harian')->select("mas_absen_user_harian.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_absen_user_harian.badge')
+                ->where(" YEAR(mas_absen_user_harian.date) = '$tahun' AND MONTH(mas_absen_user_harian.date) ='$bulan'")
+                ->orderBy("mas_absen_user_harian.badge")
+                ->get()->getResultArray();
+        } elseif ($user && $date == 'all') {
+            $tgl = explode("-", date('Y-m'));
+            $tahun = $tgl[0];
+            $bulan = $tgl[1];
+            $data = $this->db->table('mas_absen_user_harian')->select("mas_absen_user_harian.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_absen_user_harian.badge')
+                ->where("mas_absen_user_harian.badge = '$user' AND YEAR(mas_absen_user_harian.date) = '$tahun' AND MONTH(mas_absen_user_harian.date) ='$bulan'")
+                ->orderBy("mas_absen_user_harian.badge")
+                ->get()->getResultArray();
+        } elseif ($user == 'all' && $date) {
+            $tgl = explode("-", $date);
+            $tahun = $tgl[0];
+            $bulan = $tgl[1];
+            $data = $this->db->table('mas_absen_user_harian')->select("mas_absen_user_harian.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_absen_user_harian.badge')
+                ->where(" YEAR(mas_absen_user_harian.date) = '$tahun' AND MONTH(mas_absen_user_harian.date) ='$bulan'")
+                ->orderBy("mas_absen_user_harian.badge")
+                ->get()->getResultArray();
+        } elseif ($user && $date) {
+            $tgl = explode("-", $date);
+            $tahun = $tgl[0];
+            $bulan = $tgl[1];
+            $data = $this->db->table('mas_absen_user_harian')->select("mas_absen_user_harian.*, user_app.name")
+                ->join('user_app', 'user_app.id_bet = mas_absen_user_harian.badge')
+                ->where("mas_absen_user_harian.badge = '$user' AND YEAR(mas_absen_user_harian.date) = '$tahun' AND MONTH(mas_absen_user_harian.date) ='$bulan'")
+                ->get()->getResultArray();
+        }
+        return $data;
+    }
+
+
+
+    public function getAbsenUserHarian($bulan, $tahun, $badge)
+    {
+
+
+        $data = $this->getDateUser($bulan, $tahun);
+
+        $simpan = [];
+        foreach ($data as $d) {
+            if ($d <= 25) {
+                $bulancari = $bulan + 1;
+                $data = $this->db->table('mas_absen_user_harian')->select("mas_absen_user_harian.*, user_app.name")
+                    ->join('user_app', 'user_app.id_bet = mas_absen_user_harian.badge')
+                    ->where("mas_absen_user_harian.badge = '$badge' AND YEAR(mas_absen_user_harian.date) = '$tahun' AND MONTH(mas_absen_user_harian.date) ='$bulancari' AND DAY(mas_absen_user_harian.date) =$d")
+                    ->orderBy("mas_absen_user_harian.date", "ASC")
+                    ->get()->getResultArray();
+                array_push($simpan, ['date' => $d . "-" . $bulancari . "-" . $tahun, "data" => $data]);
+            } else {
+                $data = $this->db->table('mas_absen_user_harian')->select("mas_absen_user_harian.*, user_app.name")
+                    ->join('user_app', 'user_app.id_bet = mas_absen_user_harian.badge')
+                    ->where("mas_absen_user_harian.badge = '$badge' AND YEAR(mas_absen_user_harian.date) = '$tahun' AND MONTH(mas_absen_user_harian.date) ='$bulan' AND DAY(mas_absen_user_harian.date) =$d")
+                    ->orderBy("mas_absen_user_harian.date", "ASC")
+                    ->get()->getResultArray();
+                array_push($simpan, ['date' => $d . "-" . $bulan . "-" . $tahun, "data" => $data]);
+            }
+        }
+        return $simpan;
+    }
+
+    private function getDateUser($awalbulan, $awaltahun)
+    {
+        $total = [];
+        $kalender = CAL_GREGORIAN;
+
+
+        for ($i = 26; $i < cal_days_in_month($kalender, $awalbulan, $awaltahun) + 1; $i++) {
+            array_push($total, $i);
+        }
+
+        for ($i = 1; $i < 25 + 1; $i++) {
+            array_push($total, $i);
+        }
+
+        return $total;
+    }
+
+    public function updateBpjs($badge, $nominal)
+    {
+        $sesi = session()->get('data');
+        $cek = $this->db->table('setting_user_harian')->where(['badge' => $badge])->get()->getRowArray();
+
+        if ($cek) {
+            $this->db->table('setting_user_harian')->where(['badge' => $badge])->update(['bpjs' => $nominal, 'update' => date("Y-M-d h:i:s A") . " By " . $sesi['username']]);
+            return ['stts' => true, 'msg' => 'berhasil di update...!'];
+        } else {
+            $this->db->table('setting_user_harian')->insert(['bpjs' => $nominal, 'badge' => $badge, 'create' =>  date("Y-M-d h:i:s A") . " By " . $sesi['username']]);
+            return ['stts' => true, 'msg' => 'berhasil di buat...!'];
+        }
     }
 }

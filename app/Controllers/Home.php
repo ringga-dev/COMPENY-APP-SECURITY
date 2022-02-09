@@ -6,6 +6,7 @@ use App\Models\AdminModel;
 use App\Models\UndianModel;
 use TCPDF;
 
+
 class Home extends BaseController
 {
     //fungsi untuk mendapatkan model dari agar bisa di pakai
@@ -225,5 +226,24 @@ class Home extends BaseController
         $data = $this->undian->deleteUserAll();
         session()->setFlashdata('pesan', $data);
         return redirect()->to('/home/user_undia');
+    }
+
+    public function export_user_harian()
+    {
+        $date = $this->request->getVar('waktu');
+        $badge = $this->request->getVar('badge');
+
+        // dd($date);
+        $tgl = explode("-", $date);
+        $tahun = $tgl[0];
+        $bulan = $tgl[1];
+
+        $data = ["data" => $this->admin->getAbsenUserHarian($bulan, $tahun, $badge), 'badge' => $badge, 'dateView' => "26-" . bulan($bulan) . " sd " . "25-" . bulan($bulan + 1) . "-$tahun"];
+        $html = view('conten/print/pdf_absen_user_harian', $data);
+        $mpdf = new \Mpdf\Mpdf();
+
+        $mpdf->WriteHTML($html);
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        $mpdf->Output('QR_Code_location.pdf', 'I');
     }
 }

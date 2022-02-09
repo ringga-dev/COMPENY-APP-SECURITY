@@ -1027,40 +1027,80 @@ class RestApiModel extends Model
     public function absenEtowa($bet)
     {
         $dataUser = $this->db->table('user_app')->where(['id_bet' => $bet])->get()->getRowArray();
-        $dataAbsen = $this->db->table('mas_absen_etowa')->where(['id_bet' => $dataUser['id_finger']])->orderBy('mas_absen_etowa.date', "DESC")->get()->getRowArray();
+
+        if ($dataUser['stts_kerja'] == null) {
+            $dataAbsen = $this->db->table('mas_absen_etowa')->where(['id_bet' => $dataUser['id_finger']])->orderBy('mas_absen_etowa.date', "DESC")->get()->getRowArray();
 
 
-        if ($dataAbsen) {
-            $lastAbsen = $dataAbsen['time'];
-        } else {
-            $lastAbsen = 0;
-        }
+            if ($dataAbsen) {
+                $lastAbsen = $dataAbsen['time'];
+            } else {
+                $lastAbsen = 0;
+            }
 
 
-        $rentang = time() - $lastAbsen;
-        if ($rentang > 300) {
-            if ($dataUser) {
-                $this->db->table('mas_absen_etowa')->insert(['id_bet' => $dataUser['id_finger'], 'date' => date("Y-m-d H:i:s"), 'time' => time()]);
-                return  [
-                    'stts' => true,
-                    'msg' =>  $dataUser['name'] . " <br/>$bet </h4>",
-                    'txt' =>  $dataUser['name'] . " kamu berhasil absen!"
-                ];
+            $rentang = time() - $lastAbsen;
+            if ($rentang > 300) {
+                if ($dataUser) {
+                    $this->db->table('mas_absen_etowa')->insert(['id_bet' => $dataUser['id_finger'], 'date' => date("Y-m-d H:i:s"), 'time' => time()]);
+                    return  [
+                        'stts' => true,
+                        'msg' =>  $dataUser['name'] . " <br/>$bet </h4>",
+                        'txt' =>  $dataUser['name'] . " kamu berhasil absen!"
+                    ];
+                } else {
+                    return  [
+                        'stts' => false,
+                        'msg' => "User belum terdaftar...!",
+                        'txt' => "Kamu belum terdaftar!"
+                    ];
+                }
             } else {
                 return  [
-                    'stts' => false,
-                    'msg' => "User belum terdaftar...!",
-                    'txt' => "Kamu belum terdaftar!"
+                    'stts' => true,
+                    'msg' => $dataUser['name'] . "<br/>telah absen ...!",
+                    'txt' =>  "Absen talah di rekap, trimakasih!"
                 ];
             }
+            return $dataAbsen;
         } else {
-            return  [
-                'stts' => true,
-                'msg' => $dataUser['name'] . "<br/>telah absen ...!",
-                'txt' =>  "Absen talah di rekap, trimakasih!"
-            ];
+
+
+            $dataAbsen = $this->db->table('mas_absen_user_harian')->where(['badge' => $dataUser['id_bet']])->orderBy('mas_absen_user_harian.date', "DESC")->get()->getRowArray();
+
+            if ($dataAbsen) {
+                $lastAbsen = $dataAbsen['time'];
+            } else {
+                $lastAbsen = 0;
+            }
+
+
+
+            $rentang = time() - $lastAbsen;
+            if ($rentang > 300) {
+                if ($dataUser) {
+                    $this->db->table('mas_absen_user_harian')->insert(['badge' => $bet, 'date' => date("Y-m-d H:i:s"), 'time' => time()]);
+                    return  [
+                        'stts' => true,
+                        'msg' =>  $dataUser['name'] . " <br/>$bet </h4>",
+                        'txt' =>  $dataUser['name'] . " kamu berhasil absen!"
+                    ];
+                } else {
+                    return  [
+                        'stts' => false,
+                        'msg' => "User belum terdaftar...!",
+                        'txt' => "Kamu belum terdaftar!"
+                    ];
+                }
+            } else {
+                return  [
+                    'stts' => true,
+                    'msg' => $dataUser['name'] . "<br/>telah absen ...!",
+                    'txt' =>  "Absen talah di rekap, trimakasih!"
+                ];
+            }
+            return $dataAbsen;
         }
-        return $dataAbsen;
     }
 
 

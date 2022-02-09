@@ -19,16 +19,16 @@
                     <!-- /.card-header -->
                     <div class="card-body">
                         <div class="row">
-                            <form method="post" action="<?= base_url() ?>/Admin/simpanExcel" enctype="multipart/form-data" class="col-md-3 text-right">
+                            <!-- <form method="post" action="<?= base_url() ?>/Admin/simpanExcel" enctype="multipart/form-data" class="col-md-3 text-right">
                                 <div class="row text-right ml-2 mr-2">
                                     <input type="file" class="form-control-file col" name="fileexcel" id="fileexcel">
                                     <button class="btn btn-primary " type="submit">Upload</button>
                                     <a href="<?= base_url('exp_file/data.xlsx') ?>" class="btn btn-info mr-2 ml-2 center"><i class="fas fa-download fa-2x"></i></a>
 
                                 </div>
-                            </form>
+                            </form> -->
 
-                            <form action="<?= base_url('AdminControl/produc') ?>" method="POST" class="col-md-9  text-right">
+                            <form action="<?= base_url('AdminControl/produc') ?>" method="POST" class="col-md-12  text-right">
 
 
                                 <a href="" class="btn btn-info mr-2 center" data-toggle="modal" data-target="#modal-xl"><i class="fas fa-plus-square fa-2x"></i></a>
@@ -45,11 +45,9 @@
                                     <th>Email</th>
                                     <!-- <th>Phone</th> -->
                                     <th>Devisi</th>
-                                    <!-- <th>Image</th> -->
+                                    <th>BPJS</th>
                                     <th>Created</th>
                                     <th>Created_by</th>
-                                    <th>Login Status</th>
-                                    <th>App HOD Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -64,27 +62,16 @@
                                         <td class="text-center"><?= $u['email']; ?></td>
                                         <!-- <td class="text-center"><?= $u['no_phone']; ?></td> -->
                                         <td class="text-center"><?= $u['devisi']; ?></td>
-                                        <!-- <td class="text-center"><?= $u['image']; ?></td> -->
+                                        <td class="text-center"> <a href="" class="badge badge m-1" data-toggle="modal" data-target="#modal-bpjs<?= $u['id'] ?>"><img width="30" height="30" class="m-0 p-0" src="<?= base_url() ?>/assest/logo/bpjs.png" alt="bpjs logo"></a> <?= rupiah(getBPJS($u['id_bet'])); ?></td>
                                         <td class="text-center"><?= $u['created']; ?></td>
                                         <td class="text-center"><?= $u['created_by']; ?></td>
-                                        <td class="text-center">
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" name="" id="" value="checkedValue" <?= cek_blok_userApp($u['id']) ?> onclick="userApp(<?= $u['id'] ?>)">
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" name="" id="" value="checkedValue" <?= cek_blok_userAppHOD($u['id']) ?> onclick="userHodApp(<?= $u['id'] ?>)">
-                                                </label>
-                                            </div>
-                                        </td>
+
 
                                         <td class="text-center">
-                                            <a href="" class="badge badge-warning m-1" data-toggle="modal" data-target="#modal-xl<?= $u['id'] ?>"><i class="fas fa-edit fa-2x"></i></a>
-                                            <a target="_blank" href="<?= base_url('admin/generate_badge?name=' . $u['name'] . "&badge=" . $u['id_bet'] . "&action=userApp"); ?>" class="badge badge-success mr-2 center"><i class="fas fa-file-pdf fa-2x"></i></a>
+
+                                            <a href="" class=" badge badge-warning m-1" data-toggle="modal" data-target="#modal-gaji<?= $u['id'] ?>"><i class="fas fa-file-pdf fa-2x"></i></a>
+                                            <a href="" class=" badge badge-warning m-1" data-toggle="modal" data-target="#modal-xl<?= $u['id'] ?>"><i class="fas fa-edit fa-2x"></i></a>
+                                            <a target="_blank" href="<?= base_url('admin/generate_badge_harian?name=' . $u['name'] . "&badge=" . $u['id_bet'] . "&action=userApp"); ?>" class="badge badge-success mr-2 center"><i class="fas fa-file-pdf fa-2x"></i></a>
                                             <?php
                                             if (session()->get('role') == "admin") :
                                             ?>
@@ -103,7 +90,7 @@
                                                     </button>
                                                 </div>
 
-                                                <form action="<?= base_url() ?>/admin/edit_userApp/<?= $u['id'] ?>" method="POST" enctype="multipart/form-data">
+                                                <form action="<?= base_url() ?>/admin/edit_userAppHarian/<?= $u['id'] ?>" method="POST" enctype="multipart/form-data">
                                                     <?= csrf_field() ?>
                                                     <div class="modal-body">
                                                         <div class="row">
@@ -167,8 +154,92 @@
                                                     </div>
                                                 </form>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="modal-gaji<?= $u['id'] ?>">
+                                        <div class="modal-dialog modal-xl">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Create Bulan</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
 
+                                                <form action="<?= base_url('/home/export_user_harian?badge=' . $u['id_bet']) ?>" method="POST" enctype="multipart/form-data">
+                                                    <?= csrf_field() ?>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="card-body">
+                                                                                <div class="form-group">
+                                                                                    <label for="nama_barang">waktu</label>
+                                                                                    <div class="input-group">
+                                                                                        <input type="month" class="form-control" id="waktu" name="waktu" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /.col (RIGHT) -->
+                                                                </div>
+                                                            </div>
 
+                                                        </div>
+                                                        <!-- /.col (RIGHT) -->
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="modal-bpjs<?= $u['id'] ?>">
+                                        <div class="modal-dialog modal-xl">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Create BPJS</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+
+                                                <form action="<?= base_url() ?>/admin/bpjs_user/<?= $u['id_bet'] ?>" method="POST" enctype="multipart/form-data">
+                                                    <?= csrf_field() ?>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="card-body">
+                                                                                <div class="form-group">
+                                                                                    <label for="nama_barang">Nominal</label>
+                                                                                    <div class="input-group">
+                                                                                        <input type="number" class="form-control" id="nominal" name="nominal" value="<?= getBPJS($u['id_bet']) ?>" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /.col (RIGHT) -->
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <!-- /.col (RIGHT) -->
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -198,7 +269,7 @@
                 </button>
             </div>
             <!-- class="was-validated" -->
-            <form action="<?= base_url() ?>/admin/action_user" method="POST" enctype="multipart/form-data">
+            <form action="<?= base_url() ?>/admin/action_user_harian" method="POST" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <div class="modal-body">
                     <div class="row">
@@ -216,12 +287,7 @@
                                         <input type="text" class="form-control" id="id_bet" name="id_bet" required>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="id_finger">Id Finger</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="id_finger" name="id_finger" required>
-                                    </div>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="jumlah">Email</label>
                                     <div class="input-group">

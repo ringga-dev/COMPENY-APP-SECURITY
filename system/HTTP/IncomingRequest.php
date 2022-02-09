@@ -156,7 +156,7 @@ class IncomingRequest extends Request
 
         $this->config       = $config;
         $this->uri          = $uri;
-        $this->body         = ! empty($body) ? $body : null;
+        $this->body         = !empty($body) ? $body : null;
         $this->userAgent    = $userAgent;
         $this->validLocales = $config->supportedLocales;
 
@@ -177,7 +177,7 @@ class IncomingRequest extends Request
     {
         $this->locale = $this->defaultLocale = $config->defaultLocale;
 
-        if (! $config->negotiateLocale) {
+        if (!$config->negotiateLocale) {
             return;
         }
 
@@ -234,7 +234,7 @@ class IncomingRequest extends Request
      */
     protected function parseRequestURI(): string
     {
-        if (! isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
+        if (!isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
             return '';
         }
 
@@ -252,7 +252,7 @@ class IncomingRequest extends Request
 
             foreach (explode('/', $_SERVER['SCRIPT_NAME']) as $i => $segment) {
                 // If these segments are not the same then we're done
-                if (! isset($segments[$i]) || $segment !== $segments[$i]) {
+                if (!isset($segments[$i]) || $segment !== $segments[$i]) {
                     break;
                 }
 
@@ -360,7 +360,7 @@ class IncomingRequest extends Request
      */
     public function isSecure(): bool
     {
-        if (! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+        if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
             return true;
         }
 
@@ -368,7 +368,7 @@ class IncomingRequest extends Request
             return true;
         }
 
-        return $this->hasHeader('Front-End-Https') && ! empty($this->header('Front-End-Https')->getValue()) && strtolower($this->header('Front-End-Https')->getValue()) !== 'off';
+        return $this->hasHeader('Front-End-Https') && !empty($this->header('Front-End-Https')->getValue()) && strtolower($this->header('Front-End-Https')->getValue()) !== 'off';
     }
 
     /**
@@ -407,7 +407,7 @@ class IncomingRequest extends Request
             if ($config->forceGlobalSecureRequests && $this->uri->getScheme() === 'http') {
                 $this->uri->setScheme('https');
             }
-        } elseif (! is_cli()) {
+        } elseif (!is_cli()) {
             // @codeCoverageIgnoreStart
             exit('You have an empty or invalid base URL. The baseURL value must be set in Config\App.php, or through the .env file.');
             // @codeCoverageIgnoreEnd
@@ -438,7 +438,7 @@ class IncomingRequest extends Request
     {
         // If it's not a valid locale, set it
         // to the default locale for the site.
-        if (! in_array($locale, $this->validLocales, true)) {
+        if (!in_array($locale, $this->validLocales, true)) {
             $locale = $this->defaultLocale;
         }
 
@@ -535,14 +535,14 @@ class IncomingRequest extends Request
 
         $data = dot_array_search($index, $this->getJSON(true));
 
-        if (! is_array($data)) {
+        if (!is_array($data)) {
             $filter = $filter ?? FILTER_DEFAULT;
             $flags  = is_array($flags) ? $flags : (is_numeric($flags) ? (int) $flags : 0);
 
             return filter_var($data, $filter, $flags);
         }
 
-        if (! $assoc) {
+        if (!$assoc) {
             return json_decode(json_encode($data));
         }
 
