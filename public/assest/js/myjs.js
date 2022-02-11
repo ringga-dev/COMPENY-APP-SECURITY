@@ -97,7 +97,9 @@ $('.ok-ambil').on('click', function(e) {
         confirmButtonText: 'Yes, download!'
     }).then((result) => {
         if (result.isConfirmed) {
-            document.location.href = url;
+            // document.location.href = url;
+            // document.location = '_blank';
+            window.open(url, "'_blank'")
         }
     })
 

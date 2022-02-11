@@ -106,7 +106,7 @@
     <header class="masthead text-white text-center" style="background-color: #3B4E94; height: 100%;">
         <div class="container d-flex align-items-center flex-column">
             <!-- Icon Divider-->
-            <div class="divider-custom divider-light" style="margin-top: 20%;">
+            <div class="divider-custom divider-light" style="margin-top: 5%;">
             </div>
             <div class="divider-custom divider-light p-1 m-1">
                 <div class="divider-custom-line p-1 m-1"></div>
@@ -118,7 +118,7 @@
                 <div class="card p-3 m-2 text-center" style=" background-color: #BCBCBD;">
                     <div class="form-group">
                         <h2 style="color: black;"><strong>VISITOR SCAN</strong></h2>
-                        <select class="custom-select custom-select-lg" id="visitor-data-satu" name="visitor-data-satu" required>
+                        <select class="custom-select custom-select-lg" id="visitor-data-satu" name="visitor-data-satu" hidden required>
                             <option value="masuk">IN</option>
                             <option value="keluar">OUT</option>
                         </select>
@@ -149,7 +149,7 @@
                             <div class="col-lg">
                                 <h4 style="color: black;">STATUS </h4>
                                 <div class=" row">
-                                    <select class="custom-select custom-select-lg" id="stts_izin" name="stts_izin" required>
+                                    <select class="custom-select custom-select-lg" id="stts_izin" name="stts_izin" hidden required>
                                         <option value="in">MASUK</option>
                                         <option value="out">KELUAR</option>
                                     </select>
@@ -168,7 +168,7 @@
                 <div class="card p-3 m-2 text-center" style=" background-color: #BCBCBD;">
                     <div class="form-group">
                         <h2 style="color: black;"><strong>LOT 7 - LOT 1</strong> </h2>
-                        <div class="card" style=" background-color: #fff7;">
+                        <div class="card" style=" background-color: #fff7;" hidden>
                             <div class="card" style=" background-color: #fff1;">
                                 <h4 style="color: #000;">STATUS </h4>
 
@@ -389,9 +389,8 @@
 
             $("#send_visitor").hide()
 
-            $("#visitor-data-satu").click(function() {
-                $("#send_visitor").show()
-            })
+
+            $("#send_visitor").show()
             // izin lot scema stop
 
             $("#qr_visitor").on('keypress', function(e) {

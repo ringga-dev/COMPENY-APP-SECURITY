@@ -688,4 +688,33 @@ class AdminModel extends Model
             return ['stts' => true, 'msg' => 'berhasil di buat...!'];
         }
     }
+
+    public function getSection()
+    {
+        return $this->db->table('tblweb_section')->get()->getResultArray();
+    }
+
+
+    public function addSection($devisi)
+    {
+        $sesi = session()->get('data');
+        $this->db->table("tblweb_section")->insert(["section" => $devisi, "create" => date("Y-M-d h:i:s A") . " By " . $sesi['username']]);
+        return ['stts' => true, 'msg' => 'berhasil di tambahkan...!'];
+    }
+
+    public function editSection($id, $devisi)
+    {
+        $sesi = session()->get('data');
+        $this->db->table("tblweb_section")->where(['id' => $id])->update(['section' => $devisi, "update" => date("Y-M-d h:i:s A") . " By " . $sesi['username']]);
+        return ['stts' => true, 'msg' => 'berhasil di edit...!'];
+    }
+
+    public function deleteSection($id)
+    {
+        $this->db->table("tblweb_section")->where(['id' => $id])->delete();
+        return ['stts' => true, 'msg' => 'berhasil di delete...!'];
+    }
 }
+
+
+// [10:21:59 AM] <IT - Ringga> (private) Planner - Limi: coba tunggu besok kak, tadi kuliat datanya emang ada cuman karna pf-1 yang baru satu inputan mangkanya datanya blum ke rekap semua

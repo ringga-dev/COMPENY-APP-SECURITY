@@ -105,4 +105,10 @@ class UndianModel extends Model
         $this->db->table('user_undian')->truncate();
         return ['stts' => true, 'msg' => 'Proses berhasil...!'];
     }
+
+
+    public function getSection()
+    {
+        return $this->db->table('tblweb_section')->get()->getResultArray();
+    }
 }

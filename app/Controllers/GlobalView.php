@@ -25,6 +25,13 @@ class GlobalView extends BaseController
         return json_encode($this->undian->getDevisi());
     }
 
+    public function section()
+    {
+        return json_encode($this->undian->getSection());
+    }
+
+
+
 
 
 

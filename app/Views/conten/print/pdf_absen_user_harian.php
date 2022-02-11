@@ -78,38 +78,43 @@
 ?>
 
 <body>
+
+
+    <H3 style="width: 100%; text-align: center;">
+        Upah
+    </H3>
+
     <table class="viewTable">
         <tr class="size">
-            <th class="size">BADGE</th>
-            <th class="size">:<?= $data_user['id_bet']; ?></th>
-            <th class="size">Employee Title </th>
+            <th class="size"> Badge</th>
+            <th class="size"> :<?= $data_user['id_bet']; ?></th>
+            <th class="size"> Judul Karyawan </th>
             <th class="size"> :</th>
         </tr>
 
         <tr class="size">
-            <th class="size">Employee Code</th>
+            <th class="size"> Kode Karyawan</th>
             <th class="size"> :</th>
-            <th class="size">Employee Hire Date</th>
-            <th class="size">:</th>
+            <th class="size"> Tanggal Perekrutan Karyawan</th>
+            <th class="size"> :</th>
         </tr>
         <tr class="size">
-            <th class="size">Employee Name</th>
-            <th class="size">:<?= $data_user['name']; ?></th>
-            <th class="size">Departement Name</th>
+            <th class="size"> Nama Karyawan</th>
+            <th class="size"> :<?= $data_user['name']; ?></th>
+            <th class="size"> Nama Departemen</th>
             <th class="size">:</th>
         </tr>
     </table>
 
     <br>
-    <h5 style="text-align: center; width: 100%;"> Date : <?= $dateView; ?></h5>
+    <h5 style="text-align: center; width: 100%;"> <?= $dateView; ?></h5>
     <br>
     <table class="table1">
         <tr class="thview">
             <th class="thview" rowspan="2">No</th>
             <th class="thview" rowspan="2">Date</th>
             <th class="thview" rowspan="2">DAY</th>
-            <th class="thview" rowspan="2">Working Hrs</th>
-            <th class="thview" colspan="2">Pluch Card Record</th>
+            <th class="thview" colspan="2">Working Hrs</th>
             <th class="thview" rowspan="2">Jam</th>
             <th class="thview" rowspan="2" width="20%">Remark</th>
         </tr>
@@ -167,7 +172,6 @@
                 <td class="thview"><?= $i++; ?></td>
                 <td class="thview"><?= $d['date']; ?></td>
                 <td class="thview"><?= $daftar_hari[date('l', strtotime($d['date']))]; ?></td>
-                <td class="thview"><?= $text; ?></td>
                 <td class="thview"><?= $dateIN != null ? date_format(date_create($dateIN[0]), "H:i:s") : "libur"; ?></td>
                 <td class="thview"><?= $dateOUT != null ? date_format(date_create($dateOUT[count($dateOUT) - 1]), "H:i:s") : "libur"; ?></td>
                 <td class="thview"><?= $jam_kerja < 1 ? "libur" : $jam_kerja; ?></td>
@@ -177,13 +181,13 @@
         <?php $total_jam += $jam_kerja;
         } ?>
         <tr>
-            <td style="border: 1;" colspan="6">TOTAL</td>
+            <td style="border: 1;" colspan="5">TOTAL</td>
             <td style="border: 1;"><?= $total_jam; ?></td>
             <td style="border: 1;"></td>
         </tr>
     </table>
     <br />
-    <h5><strong>Upah periode 01 - 31 januari 2020</strong></h5>
+    <h5><strong>Upah periode <?= $dateView; ?></strong></h5>
 
     <table class="viewTable">
         <tr class="updata">
@@ -204,7 +208,7 @@
             </th>
         </tr>
         <tr class="updata">
-            <th class="updata">BPJS</th>
+            <th class="updata">Potogan BPJS</th>
             <th class="updata">:<?= rupiah(getBPJS($badge)); ?></th>
         </tr>
         <tr class="updata">
@@ -213,7 +217,7 @@
             </th>
             <!-- total ini merupkan jam kerja * gaji/jam + bpjs -->
             <th class="updata "><br>
-                <hr> <strong class="total_color"> : <?= rupiah((cek_upah() * $total_jam) + getBPJS($badge)) ?></strong>
+                <hr> <strong class="total_color"> : <?= rupiah((cek_upah() * $total_jam) - getBPJS($badge)) ?></strong>
             </th>
 
         </tr>
@@ -254,7 +258,7 @@
 
 
     <br />
-    <h5>Node : Mohon Dibayarkan Upah + Overtime 1 orang atas nama <strong><?= $data_user['name']; ?></strong> sebesar angka yang tertera di atas</h5>
+    <h5>Node : Mohon Dibayarkan Upah 1 orang atas nama <strong><?= $data_user['name']; ?></strong> sebesar angka yang tertera di atas</h5>
 
     <br />
     <table style="width: 100%; text-align: center;">

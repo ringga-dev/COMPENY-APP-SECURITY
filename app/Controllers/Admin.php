@@ -352,6 +352,7 @@ class Admin extends BaseController
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
+            'section' => $this->request->getPost('section'),
             'password' => $password_hash,
             'image' => 'user.jpg',
             'enable_login' => 0,
@@ -376,6 +377,7 @@ class Admin extends BaseController
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
+            'section' => $this->request->getPost('section'),
             'update_by' =>  date("Y-M-d h:i:s A") . " By " . $sesi['username'],
         ];
 
@@ -794,6 +796,8 @@ class Admin extends BaseController
             return redirect()->to('/home');
         }
     }
+
+
     public function generate_badge_harian()
     {
         if ($this->request->getVar('action') == 'visitor') {
@@ -868,6 +872,7 @@ class Admin extends BaseController
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
+            'section' => $this->request->getPost('section'),
             'password' => $password_hash,
             'image' => 'user.jpg',
             'enable_login' => 0,
@@ -892,6 +897,7 @@ class Admin extends BaseController
             'email' => $this->request->getPost('email'),
             'no_phone' => $this->request->getPost('no_phone'),
             'devisi' => $this->request->getPost('devisi'),
+            'section' => $this->request->getPost('section'),
             'update_by' =>  date("Y-M-d h:i:s A") . " By " . $sesi['username'],
         ];
 
@@ -907,4 +913,69 @@ class Admin extends BaseController
         session()->setFlashdata('pesan', $data);
         return redirect()->to('/admin/user_harian');
     }
+
+
+    //section
+
+    public function section()
+    {
+
+        $data = [
+            'title' => 'Managemen Section',
+            'visitor' =>  $this->admin->getSection(),
+        ];
+        // dd($data);
+        return view('conten/home/section', $data);
+    }
+
+    public function add_section()
+    {
+        $devisi = $this->request->getVar('section');
+        $pesan = $this->admin->addSection($devisi);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/section');
+    }
+
+    public function edit_section($id)
+    {
+        $devisi = $this->request->getVar('section');
+        $pesan = $this->admin->editSection($id, $devisi);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/section');
+    }
+
+    public function delete_section($id)
+    {
+        $pesan = $this->admin->deleteSection($id);
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to('/admin/section');
+    }
 }
+
+
+//    public function devisi()
+//     {
+
+//         $data = [
+//             'title' => 'Managemen Devisi',
+//             'visitor' =>  $this->admin->getDevisi(),
+//         ];
+//         // dd($data);
+//         return view('conten/home/devisi', $data);
+//     }
+
+//     public function add_devisi()
+//     {
+//         $devisi = $this->request->getVar('privilege_name');
+//         $pesan = $this->admin->addDevisi($devisi);
+//         session()->setFlashdata('pesan', $pesan);
+//         return redirect()->to('/admin/devisi');
+//     }
+
+//     public function edit_devisi($id)
+//     {
+//         $devisi = $this->request->getVar('privilege_name');
+//         $pesan = $this->admin->editSection($id, $devisi);
+//         session()->setFlashdata('pesan', $pesan);
+//         return redirect()->to('/admin/devisi');
+    // }

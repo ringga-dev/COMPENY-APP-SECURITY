@@ -137,6 +137,13 @@
                                                                                         <option class="bg-blue" value="<?= $u['devisi']; ?>"><?= $u['devisi']; ?></option>
                                                                                     </select>
                                                                                 </div>
+
+                                                                                <div class="form-group">
+                                                                                    <label for="jumlah">Section</label>
+                                                                                    <select type="text" class="custom-select rounded-0 section" id="section" name="section">
+                                                                                        <option value="">No Join to List</option>
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
 
@@ -218,6 +225,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-12">
                                                                             <div class="card-body">
+                                                                                <div class="form-group text-center">
+                                                                                    <h2 for="nama_barang"><strong>Nama : <?= $u['name'] ?></strong></h2>
+                                                                                    <h4 for="nama_barang">Badge : <?= $u['id_bet'] ?></h4>
+
+                                                                                </div>
                                                                                 <div class="form-group">
                                                                                     <label for="nama_barang">Nominal</label>
                                                                                     <div class="input-group">
@@ -304,6 +316,13 @@
                                 <div class="form-group">
                                     <label for="jumlah">Devisi</label>
                                     <select type="text" class="custom-select rounded-0 devisi" id="devisi" name="devisi">
+                                        <option value="">No Join to List</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="jumlah">Section</label>
+                                    <select type="text" class="custom-select rounded-0 section" id="section" name="section">
                                         <option value="">No Join to List</option>
                                     </select>
                                 </div>
@@ -401,6 +420,19 @@
                                   </option>`);
             })
 
+        }
+    });
+
+    $.ajax({
+        type: "post",
+        url: "<?= base_url('globalview/section') ?>",
+        dataType: "json",
+        success: function(response) {
+            response.forEach(function(data) {
+                $('.section').append(`<option value="${data.section}">
+                                   ${data.section}
+                                  </option>`);
+            })
         }
     });
 </script>
